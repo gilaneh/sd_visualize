@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <!-- ==================================================  sd_visualize.value ====================-->
+
+        <record model="ir.ui.view" id="sd_visualize_value_list">
+            <field name="name">value</field>
+            <field name="model">sd_visualize.values</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="diagram" />
+                    <field name="display_name" />
+                    <field name="variable_name" />
+                    <field name="value" />
+                    <field name="equation" />
+
+                </tree>
+            </field>
+        </record>
+
+         <!-- ==================================================  Search ====================-->
+
+        <record model="ir.ui.view" id="sd_visualize_value_list_search">
+            <field name="name">sd_visualize</field>
+            <field name="model">sd_visualize.values</field>
+            <field name="arch" type="xml">
+                <search string="">
+
+                </search>
+            </field>
+        </record>
+
+
+        <!-- ==================================================  Action Window ====================-->
+
+        <record model="ir.actions.act_window" id="sd_visualize.action_window_value">
+            <field name="name">Values</field>
+            <field name="res_model">sd_visualize.values</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ==================================================  Menu ====================-->
+
+        <menuitem name="Values"
+                  id="sd_visualize.project_value_menu"
+                  parent="sd_visualize.settings_menu"
+                  groups="base.group_system"
+                  action="sd_visualize.action_window_value"/>
+
+    </data>
+</odoo>

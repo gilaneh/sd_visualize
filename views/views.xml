@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+
+        <!-- ==================================================  sd_visualize.SETTINGS ====================-->
+
+
+        <!-- ==================================================  Search ====================-->
+
+
+        <!-- ==================================================  Action Window ====================-->
+
+
+        <!-- ==================================================  Menu ====================-->
+
+
+
+        <menuitem name="Visualize"
+                  id="sd_visualize.sd_visualize_root_menu"
+                />
+
+        <menuitem name="Settings"
+          id="sd_visualize.settings_menu"
+          parent="sd_visualize.sd_visualize_root_menu"
+          groups="sd_visualize.group_sd_visualize_admins"
+          sequence="30"/>
+
+
+
+
+    </data>
+</odoo>
