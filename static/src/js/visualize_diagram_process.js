@@ -108,6 +108,21 @@
             ev.target.nextSibling.classList.toggle('d-none');
         },
         _onClickDraggableDiv: function(ev){
+            if(editMode){
+                console.log('_onClickDraggableDiv', ev);
+                let setting_div =  document.querySelectorAll('.draggable_setting_div');
+               setting_div.forEach(el =>{
+                                        el.classList.remove('d-none');
+                                        el.classList.add('d-none');
+                                        })
+
+               let draggable_div =  document.querySelectorAll('.visualize_draggable_div');
+                draggable_div.forEach(el =>{
+                                        el.classList.remove('draggable_zindex');
+                                        })
+                ev.currentTarget.classList.add('draggable_zindex');
+                ev.currentTarget.childNodes[1].classList.remove('d-none');
+            }
 //            if(editMode && ev.target.classList.contains('visualize_draggable_div')){
 //                ev.target.style.borderWidth = '1px';
 //                ev.target.style.border = 'dashed';
@@ -291,6 +306,7 @@
                     div.classList.add('visualize_draggable_div');
                     if (editMode) {
                         div.classList.add('draggable_move');
+//                        div.innerHTML = `<div class="draggable_setting_div">INNER</div>`;
 
                         //font color picker
                         let settingBox = document.createElement("div");
@@ -301,6 +317,7 @@
                         div.appendChild(settingBox);
 
                         div.appendChild(settingDiv);
+//                        settingDiv.classList.add('d-none', 'draggable_setting_div');
                         settingDiv.classList.add('d-none', 'draggable_setting_div');
 
 

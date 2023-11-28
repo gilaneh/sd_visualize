@@ -39,10 +39,9 @@
                         </page>
                         <page string="Values">
                             <group>
-                                    <field name="values" domain="[('diagram', '=', id)]" widget="many2many"
-                                          context="{'diagram': id}" >
+                                    <field name="values" domain="[('diagram', '=', id)]" context="{'diagram': id}" widget="one2many" nolabel="1">
                                         <tree editable="top" delete="0" >
-                                            <field name="diagram" invisible="0" />
+                                            <field name="diagram" invisible="1" />
                                             <field name="display_name"/>
                                             <field name="variable_name"/>
                                             <field name="value"/>
