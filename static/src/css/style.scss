@@ -12,29 +12,39 @@
     color: black;
 
 }
-.draggable_font_color{
+.draggable_setting_div{
     position: absolute;
-    top: -35px;
-    right: 20px;
+    top: -110px;
+//     right: -10px;
+    font-size: 20px;
+    background-color: #ffffff70;
+    padding: 5px;
+    border-radius: 5px;
 
 }
+// .draggable_font_color{
+//     position: absolute;
+//     top: -35px;
+//     right: 20px;
+//
+// }
 
-.draggable_border_color{
-    position: absolute;
-    top: -35px;
-    right: 90px;
-}
+// .draggable_border_color{
+//     position: absolute;
+//     top: -35px;
+//     right: 90px;
+// }
 
-.draggable_border_show{
-    position: absolute;
-    top: -55px;
-    right: 90px;
-}
-.draggable_font_size{
-    position: absolute;
-    top: -30px;
-    right: 160px;
-}
+// .draggable_border_show{
+//     position: absolute;
+//     top: -55px;
+//     right: 90px;
+// }
+// .draggable_font_size{
+//     position: absolute;
+//     top: -30px;
+//     right: 160px;
+// }
 .visualize_box_content{
   text-align: center;
   overflow: hidden;
@@ -51,7 +61,7 @@
 .visualize_draggable_div {
   position: absolute;
   display: flex;
-      justify-content: center;
+//       justify-content: center;
     flex-direction: column;
 //   width: 100px;
 //   height: 100px;

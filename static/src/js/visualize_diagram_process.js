@@ -16,6 +16,7 @@
             'click .sd_visualize_image_page': '_onClickImagePage',
             'click .draggable_setting': '_onClickDraggableSetting',
             'click .visualize_draggable_div': '_onClickDraggableDiv',
+            'click .diagram_process_form_view_image ': '_onClickImage',
         },
         /**
         *   As many2many field is not
@@ -101,16 +102,20 @@
             /**
              * It hides all the settings div on the the page and then shows the current div
              */
-            document.querySelectorAll('.draggable_setting_div').forEach(el =>{
-                el.classList.remove('d-none');
-                el.classList.add('d-none');
-            })
-            ev.target.nextSibling.classList.toggle('d-none');
+             console.log('_onClickDraggableSetting', ev);
+
+//            document.querySelectorAll('.draggable_setting_div').forEach(el =>{
+//                el.classList.remove('d-none');
+//                el.classList.add('d-none');
+//            })
+//            ev.target.nextSibling.classList.toggle('d-none');
         },
-        _onClickDraggableDiv: function(ev){
+        _clearDraggableDiv: function(ev){
             if(editMode){
-                console.log('_onClickDraggableDiv', ev);
-                let setting_div =  document.querySelectorAll('.draggable_setting_div');
+                console.log(ev)
+                console.log(ev.target.parentElement.classList.contains('diagram_process_form_view_image'))
+
+               let setting_div =  document.querySelectorAll('.draggable_setting_div');
                setting_div.forEach(el =>{
                                         el.classList.remove('d-none');
                                         el.classList.add('d-none');
@@ -120,14 +125,25 @@
                 draggable_div.forEach(el =>{
                                         el.classList.remove('draggable_zindex');
                                         })
-                ev.currentTarget.classList.add('draggable_zindex');
-                ev.currentTarget.childNodes[1].classList.remove('d-none');
-            }
-//            if(editMode && ev.target.classList.contains('visualize_draggable_div')){
-//                ev.target.style.borderWidth = '1px';
-//                ev.target.style.border = 'dashed';
-//            }
 
+               let box_content =  document.querySelectorAll('.visualize_box_content');
+                box_content.forEach(el =>{
+                                        el.classList.remove('border', 'border-warning');
+                                        })
+            }
+        },
+        _onClickImage: function(ev){
+            if(ev.target.parentElement.classList.contains('diagram_process_form_view_image')){
+                this._clearDraggableDiv(ev);
+            }
+        },
+        _onClickDraggableDiv: function(ev){
+            if(editMode ){
+                this._clearDraggableDiv(ev);
+                ev.currentTarget.classList.add('draggable_zindex');
+                ev.currentTarget.childNodes[0].classList.remove('d-none');
+                ev.currentTarget.childNodes[1].classList.add('border', 'border-warning');
+            }
         },
     });
 
@@ -301,50 +317,68 @@
                 values.forEach(value => {
                     pointer[value.loc_id] = value;
 //                    console.log(pointer, value)
+                    let containerDiv = document.createElement("div");
                     let settingDiv = document.createElement("div");
-                    let div = document.createElement("div");
-                    div.classList.add('visualize_draggable_div');
+                    containerDiv.classList.add('visualize_draggable_div');
                     if (editMode) {
-                        div.classList.add('draggable_move');
-//                        div.innerHTML = `<div class="draggable_setting_div">INNER</div>`;
+                        containerDiv.classList.add('draggable_move');
 
-                        //font color picker
-                        let settingBox = document.createElement("div");
-//                        settingBox.type = 'color';
-                        settingBox.id = `fontColor_${value.loc_id}`;
-                        settingBox.classList.add('fa', 'fa-gear', 'draggable_setting')
-                        settingBox.setAttribute('value', value.point_color);
-                        div.appendChild(settingBox);
+                        settingDiv.classList.add('draggable_setting_div', 'border', 'border-info', 'text-dark', 'd-none' )
+                        containerDiv.appendChild(settingDiv);
+                        settingDiv.innerHTML = `
+                            <div class="row flex-nowrap">
+                                <div class="col-5">Font: </div>
+                                <div class="col-1"></div>
+                                <div class="col-6">
+                                    <input type="color" class="draggable_font_color" value="${value.point_color}"/>
+                                </div>
+                            </div>
+                            <div class="row flex-nowrap">
+                                <div class="col-5">Border: </div>
+                                <div class="col-1">
+                                    <input type="checkbox" class="draggable_border_show" ${value.point_border_show ? "checked" : ''}/>
+                                </div>
+                                <div class="col-6">
+                                    <input type="color" class="draggable_border_color" value="${value.point_border}"/>
+                                </div>
+                            </div>
 
-                        div.appendChild(settingDiv);
+                        `;
+
+//                        //font color picker
+//                        let settingBox = document.createElement("div");
+//                        settingBox.id = `fontColor_${value.loc_id}`;
+//                        settingBox.classList.add('fa', 'fa-gear', 'draggable_setting')
+//                        settingBox.setAttribute('value', value.point_color);
+//                        div.appendChild(settingBox);
+//
 //                        settingDiv.classList.add('d-none', 'draggable_setting_div');
-                        settingDiv.classList.add('d-none', 'draggable_setting_div');
-
-
-                        //font color picker
-                        let fontColor = document.createElement("input");
-                        fontColor.type = 'color';
-                        fontColor.id = `fontColor_${value.loc_id}`;
-                        fontColor.classList.add('draggable_font_color')
-                        fontColor.setAttribute('value', value.point_color);
-                        settingDiv.appendChild(fontColor);
+//
+//
+////                        font color picker
+//                        let fontColor = document.createElement("input");
+//                        fontColor.type = 'color';
+//                        fontColor.id = `fontColor_${value.loc_id}`;
+//                        fontColor.classList.add('draggable_font_color')
+//                        fontColor.setAttribute('value', value.point_color);
+//                        settingDiv.appendChild(fontColor);
 
                         //border color picker
-                        let borderColor = document.createElement("input");
-                        borderColor.type = 'color';
-                        borderColor.id = `fontColor_${value.loc_id}`;
-                        borderColor.classList.add('draggable_border_color')
-                        borderColor.setAttribute('value', value.point_border);
-                        settingDiv.appendChild(borderColor);
+//                        let borderColor = document.createElement("input");
+//                        borderColor.type = 'color';
+//                        borderColor.id = `fontColor_${value.loc_id}`;
+//                        borderColor.classList.add('draggable_border_color')
+//                        borderColor.setAttribute('value', value.point_border);
+//                        settingDiv.appendChild(borderColor);
 
                         //border show/hide
-                        let border = document.createElement("input");
-                        border.type = 'checkbox';
-                        border.id = `fontColor_${value.loc_id}`;
-                        border.classList.add('draggable_border_show')
-                        console.log('point_border_show:',value.point_border_show);
-                        border.checked =  value.point_border_show;
-                        settingDiv.appendChild(border);
+//                        let border = document.createElement("input");
+//                        border.type = 'checkbox';
+//                        border.id = `fontColor_${value.loc_id}`;
+//                        border.classList.add('draggable_border_show')
+//                        console.log('point_border_show:',value.point_border_show);
+//                        border.checked =  value.point_border_show;
+//                        settingDiv.appendChild(border);
 
                         //font size slider
                        let fontSlider = document.createElement("input");
@@ -360,10 +394,10 @@
                        fontSlider.addEventListener('mouseleave', e => moveMode = false)
                     }
 
-                    diagram.appendChild(div);
-                    div.id = `data_box_${value.loc_id}`;
+                    diagram.appendChild(containerDiv);
+                    containerDiv.id = `data_box_${value.loc_id}`;
                     let boxContent = document.createElement("div");
-                    div.appendChild(boxContent);
+                    containerDiv.appendChild(boxContent);
 
 //                        todo: progress_plan?
                     boxContent.innerHTML = `
@@ -371,14 +405,21 @@
                         <div ><span class="progress_plan1" >${value.value}</div>
                     `;
                     boxContent.classList.add('visualize_box_content');
+//                    if (editMode){
+//                        boxContent.classList.add('border', 'border-warning');
+//
+//                    }
+//                    boxContent.style.position = 'absolute';
+//                    boxContent.style.right = 'absolute';
 
-                    div.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
-                    div.style.width = value.point_w + 'px';
-                    div.style.height = value.point_h + 'px';
-                    div.style.color = value.point_color;
-                    div.style.borderColor = value.point_border;
-                    div.style.borderWidth = value.point_border_show ? `${value.point_border_width}px` : '0px';
-                    div.style.fontSize = value.point_size + 'px';
+
+                    containerDiv.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
+                    containerDiv.style.width = value.point_w + 'px';
+                    containerDiv.style.height = value.point_h + 'px';
+                    containerDiv.style.color = value.point_color;
+                    containerDiv.style.borderColor = value.point_border;
+                    containerDiv.style.borderWidth = value.point_border_show ? `${value.point_border_width}px` : '0px';
+                    containerDiv.style.fontSize = value.point_size + 'px';
 
                 });
             }
