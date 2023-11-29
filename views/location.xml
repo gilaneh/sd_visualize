@@ -17,6 +17,7 @@
                     <field name="point_size"/>
                     <field name="point_color"/>
                     <field name="point_border"/>
+                    <field name="point_label_show"/>
                     <field name="point_border_show"/>
                     <field name="point_border_width"/>
                 </tree>

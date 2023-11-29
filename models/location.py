@@ -21,6 +21,7 @@ class SdVisualizeLocation(models.Model):
     point_size = fields.Integer(default=15)
     point_color = fields.Char(default='#71639e')
     point_border = fields.Char(default='#FF0000')
+    point_label_show = fields.Boolean(default=True)
     point_border_show = fields.Boolean(default=True)
     point_border_width = fields.Integer(default=5)
 

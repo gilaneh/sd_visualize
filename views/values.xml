@@ -7,11 +7,13 @@
             <field name="model">sd_visualize.values</field>
             <field name="arch" type="xml">
                 <tree editable="top">
+                    <field name="sequence" widget='handle'/>
                     <field name="diagram" />
                     <field name="display_name" />
                     <field name="variable_name" />
                     <field name="value" />
                     <field name="equation" />
+                    <field name="calculate" widget="boolean_toggle"/>
 
                 </tree>
             </field>

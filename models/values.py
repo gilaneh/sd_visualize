@@ -19,5 +19,7 @@ class SdVisualizeValues(models.Model):
     value = fields.Char(default='0' )
     diagram = fields.Many2one('sd_visualize.diagram', default=lambda self: self.env.context.get('diagram'))
     equation = fields.Char()
+    calculate = fields.Boolean(default=False)
+    sequence = fields.Integer(default=10)
 
 

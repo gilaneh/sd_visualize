@@ -49,6 +49,7 @@
   text-align: center;
   overflow: hidden;
 
+
 }
 .visualize_box_content div{
 //   background: white;
@@ -74,6 +75,8 @@
   border-radius: 10px;
   touch-action: none;
   user-select: none;
+  min-width: 50px;
+  min-height: 50px;
 //   transform: translate(0px, 0px);
 //   box-shadow: rgb(211, 211, 212) 0px 0px 15px;
 
@@ -86,5 +89,15 @@
 
 .draggable_zindex{
     z-index: 1000;
+}
+
+.visualize_box_content_no_label{
+    position: absolute;
+    top: -37px;
+    left: 0px;
+    font-size: 20px;
+    color: black;
+    background-color: wheat;
+    min-width: 200px;
 }
 

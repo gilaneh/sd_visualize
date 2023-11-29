@@ -23,11 +23,20 @@ class SdVisualizeDiagram(models.Model):
     last_date = fields.Date(default=lambda self: date.today())
     first_date = fields.Date(default=lambda self: date.today() - timedelta(days=30))
     update = fields.Boolean(default=False, compute='update_compute')
+    calculator = fields.Many2one('ir.model', )
+    # cal_function = fields.Many2one('sd_vcalculate.data', )
 
     @api.depends('name')
     def update_compute(self):
         for rec in self:
             rec.update = True if rec.update == False else False
+        self._calculator()
+        # print(f'---------------\n {dir(self)}\n')
+
+    def _calculator(self):
+        # todo: it needed a wizard to take dates
+        petronad = self.env['sd_vcalculate_petronad.data'].calculate(self, date.today() - timedelta(days=30), date.today())
+        print(f'RRRRRRR> \n calculator: {self.calculator} petronad: {petronad}')
 
     @api.model
     def create(self, vals):
@@ -36,7 +45,7 @@ class SdVisualizeDiagram(models.Model):
         location_module = self.env['sd_visualize.location']
         value_ids = vals.get('values')[0][2] if vals.get('values', False) else []
         values = values_model.browse(value_ids)
-        print(f'dddddddddddddd\n values: {values}')
+        # print(f'dddddddddddddd\n values: {values}')
         for value in values:
             location_module.create({'diagram': res.id, 'value_id': value.id})
         return res
@@ -44,22 +53,23 @@ class SdVisualizeDiagram(models.Model):
     # #########################################################################
     def write(self, vals):
         res = super(SdVisualizeDiagram, self).write(vals)
-        location_module = self.env['sd_visualize.location']
-        locations = location_module.search([('diagram', '=', self._origin.id)])
-        location_ids = locations.ids
-        locations_values = dict([(loc.value_id.id, loc.id) for loc in locations])
-        # print(f'\n location_values: {locations_values.keys()}')
+        print(f'\n write vals: {vals}')
+        if vals.get("values", False):
+            location_module = self.env['sd_visualize.location']
+            locations = location_module.search([('diagram', '=', self._origin.id)])
+            location_ids = locations.ids
+            locations_values = dict([(loc.value_id.id, loc.id) for loc in locations])
 
-        value_ids = vals.get("values", [[0, 0, []]])[0][2]
-        add_ids = set(value_ids).difference(set(locations_values.keys()))
-        del_ids = set(locations_values.keys()).difference(set(value_ids))
-        #
-        print(f'----.-.-.-.-.-.\n diagram: \n{vals.get("values")} \ndel_ids: {del_ids} \nadd_ids: {add_ids}')
-        del_loc_ids = list(map(lambda x: x[1] if x[0] in del_ids else False, locations_values.items()))
-        for location in location_module.browse(del_loc_ids):
-            location.unlink()
-        for value in add_ids:
-            location_module.create({'diagram': self._origin.id, 'value_id': value})
+            value_ids = vals.get("values", [[0, 0, []]])[0][2]
+            add_ids = set(value_ids).difference(set(locations_values.keys()))
+            del_ids = set(locations_values.keys()).difference(set(value_ids))
+            #
+            print(f'----.-.-.-.-.-.\n diagram: \n{vals.get("values")} \ndel_ids: {del_ids} \nadd_ids: {add_ids}')
+            del_loc_ids = list(map(lambda x: x[1] if x[0] in del_ids else False, locations_values.items()))
+            for location in location_module.browse(del_loc_ids):
+                location.unlink()
+            for value in add_ids:
+                location_module.create({'diagram': self._origin.id, 'value_id': value})
 
         return res
 
@@ -92,6 +102,7 @@ class SdVisualizeDiagram(models.Model):
                                                      'point_size': values.get('point_size', 20),
                                                      'point_color': values.get('point_color', 8),
                                                      'point_border': values.get('point_border', 8),
+                                                     'point_label_show': values.get('point_label_show', True),
                                                      'point_border_show': values.get('point_border_show', True),
                                                      'point_border_width': values.get('point_border_width', 8),
                                                      })
@@ -130,6 +141,7 @@ class SdVisualizeDiagram(models.Model):
                                 'point_size': lo.point_size,
                                 'point_color': lo.point_color,
                                 'point_border': lo.point_border,
+                                'point_label_show': lo.point_label_show,
                                 'point_border_show': lo.point_border_show,
                                 'point_border_width': lo.point_border_width,
                                 'diagram': lo.diagram
@@ -151,6 +163,7 @@ class SdVisualizeDiagram(models.Model):
                              'point_size': location.get('point_size'),
                              'point_color': location.get('point_color'),
                              'point_border': location.get('point_border'),
+                             'point_label_show': location.get('point_label_show'),
                              'point_border_show': location.get('point_border_show'),
                              'point_border_width': location.get('point_border_width'),
                              } for location in locations_list])

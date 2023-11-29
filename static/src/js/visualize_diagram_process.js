@@ -18,9 +18,6 @@
             'click .visualize_draggable_div': '_onClickDraggableDiv',
             'click .diagram_process_form_view_image ': '_onClickImage',
         },
-        /**
-        *   As many2many field is not
-        */
         _onClickImagePage: function(e){
             let self = this;
             setTimeout(function(){
@@ -29,8 +26,14 @@
                     saveButton.click();
                 }
             }, 200);
+            setTimeout(function(){
+                let editButton = self.el.querySelector('.o_form_button_edit');
+                if(editButton){
+                    editButton.click();
+                    editMode = true;
+                }
+            }, 400);
         },
-
         saveRecord: function (recordID, options) {
             let self = this;
             recordID = recordID || this.handle;
@@ -61,23 +64,6 @@
             this._super.apply(this, arguments);
             editMode = true;
         },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Apply change may be called with 'event.data.force_save' set to True.
-     * This typically happens when directly clicking in the statusbar widget on a new stage.
-     * If it's the case, we check for a modified stage_id field and if we need to display a
-     * rainbowman message.
-     *
-     * @param {string} dataPointID
-     * @param {Object} changes
-     * @param {OdooEvent} event
-     * @override
-     * @private
-     */
         _applyChanges: function (dataPointID, changes, event) {
             let self = this;
 //            let saveIt = setTimeout(function(){
@@ -135,10 +121,15 @@
         _onClickImage: function(ev){
             if(ev.target.parentElement.classList.contains('diagram_process_form_view_image')){
                 this._clearDraggableDiv(ev);
+                let box_content =  document.querySelectorAll('.visualize_box_content');
+                box_content.forEach(el =>{
+                                        el.classList.add('border', 'border-warning');
+                                        })
             }
         },
         _onClickDraggableDiv: function(ev){
             if(editMode ){
+                console.log(ev)
                 this._clearDraggableDiv(ev);
                 ev.currentTarget.classList.add('draggable_zindex');
                 ev.currentTarget.childNodes[0].classList.remove('d-none');
@@ -216,10 +207,16 @@
                         event.currentTarget.style.color = value;
                         pointer[box_id]['point_color'] = value;
                     } else if (event.originalEvent.srcElement.classList.contains('draggable_border_show')){
-                    console.log('draggable_border_show', event.originalEvent.srcElement.checked);
                         const border_checked = event.originalEvent.srcElement.checked;
                         event.currentTarget.style.borderWidth =  border_checked ? '5px' : '0px';
                         pointer[box_id]['point_border_show'] = border_checked;
+                    } else if (event.originalEvent.srcElement.classList.contains('visualize_box_content_no_label')){
+                        const label_checked = event.originalEvent.srcElement.checked;
+
+                        event.currentTarget.style.borderWidth =  border_checked ? '5px' : '0px';
+                        //
+
+                        pointer[box_id]['point_label_show'] = label_checked;
                     }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
                         let value = event.originalEvent.srcElement.value;
                         event.currentTarget.style.borderColor = value;
@@ -342,6 +339,14 @@
                                     <input type="color" class="draggable_border_color" value="${value.point_border}"/>
                                 </div>
                             </div>
+                            <div class="row flex-nowrap">
+                                <div class="col-5">Label: </div>
+                                <div class="col-1">
+                                    <input type="checkbox" class="visualize_box_content_no_label" ${value.point_label_show ? "checked" : ''}/>
+                                </div>
+                                <div class="col-6">
+                                </div>
+                            </div>
 
                         `;
 
@@ -404,7 +409,7 @@
                         <div ><span class="progress_name1" >${value.name}</span></div>
                         <div ><span class="progress_plan1" >${value.value}</div>
                     `;
-                    boxContent.classList.add('visualize_box_content');
+                    boxContent.classList.add('visualize_box_content', 'h-100');
 //                    if (editMode){
 //                        boxContent.classList.add('border', 'border-warning');
 //
@@ -417,6 +422,7 @@
                     containerDiv.style.width = value.point_w + 'px';
                     containerDiv.style.height = value.point_h + 'px';
                     containerDiv.style.color = value.point_color;
+                    containerDiv.style.color = value.point_label_show;
                     containerDiv.style.borderColor = value.point_border;
                     containerDiv.style.borderWidth = value.point_border_show ? `${value.point_border_width}px` : '0px';
                     containerDiv.style.fontSize = value.point_size + 'px';

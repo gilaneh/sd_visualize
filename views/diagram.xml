@@ -42,6 +42,8 @@
                                     <field name="values" domain="[('diagram', '=', id)]" context="{'diagram': id}" widget="one2many" nolabel="1">
                                         <tree editable="top" delete="0" >
                                             <field name="diagram" invisible="1" />
+                                            <field name="sequence" widget='handle'/>
+                                            <field name="calculate" widget="boolean_toggle"/>
                                             <field name="display_name"/>
                                             <field name="variable_name"/>
                                             <field name="value"/>
@@ -50,6 +52,22 @@
                                     </field>
                                 <group>
 
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Calculator">
+                            <group>
+                                <group>
+                                    <field name="calculator" domain="[('name', 'like', 'sd_vcal' )]"
+                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>
+<!--                                    <field name="cal_function"-->
+<!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
+                                </group>
+                                <group>
+                                    <div groups="base.group_system">
+                                        crate a model to calculate data.
+                                        the name of this module must be started by 'sd_vcal_'.
+                                    </div>
                                 </group>
                             </group>
                         </page>
