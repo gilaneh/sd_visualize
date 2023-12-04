@@ -212,9 +212,11 @@
                         pointer[box_id]['point_border_show'] = border_checked;
                     } else if (event.originalEvent.srcElement.classList.contains('visualize_box_content_no_label')){
                         const label_checked = event.originalEvent.srcElement.checked;
+//                        console.log(event)
+                        console.log(event.currentTarget)
 
-                        event.currentTarget.style.borderWidth =  border_checked ? '5px' : '0px';
-                        //
+                        let label = event.currentTarget.querySelector('.visualize_box_content_label');
+                        label_checked ? label.classList.remove('visualize_box_content_no_label_p') : label.classList.add('visualize_box_content_no_label_p')
 
                         pointer[box_id]['point_label_show'] = label_checked;
                     }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
@@ -406,7 +408,7 @@
 
 //                        todo: progress_plan?
                     boxContent.innerHTML = `
-                        <div ><span class="progress_name1" >${value.name}</span></div>
+                        <div class="visualize_box_content_label" ><span class="progress_name1" >${value.name}</span></div>
                         <div ><span class="progress_plan1" >${value.value}</div>
                     `;
                     boxContent.classList.add('visualize_box_content', 'h-100');
