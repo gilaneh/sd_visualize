@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-from datetime import  datetime, timedelta, date
-# import random
-
-from odoo import models, fields, api
-
-from colorama import Fore
+from odoo import models, fields, api, _
+from datetime import datetime, timedelta, date
 import json
 import logging
 import base64
 from PIL import Image
 import io
+from odoo.exceptions import ValidationError
 class SdVisualizeDiagram(models.Model):
     _name = 'sd_visualize.diagram'
     _description = 'sd_visualize.diagram'
@@ -23,23 +20,41 @@ class SdVisualizeDiagram(models.Model):
     last_date = fields.Date(default=lambda self: date.today())
     first_date = fields.Date(default=lambda self: date.today() - timedelta(days=30))
     update = fields.Boolean(default=False, compute='update_compute')
-    calculator = fields.Many2one('ir.model', )
+    calculator = fields.Many2one('ir.model', groups='base.group_system' )
     # cal_function = fields.Many2one('sd_vcalculate.data', )
+    image2 = fields.Binary( )
 
     @api.depends('name')
     def update_compute(self):
         for rec in self:
             rec.update = True if rec.update == False else False
-        self._calculator()
+        self.calculation_main()
         # print(f'---------------\n {dir(self)}\n')
 
-    def _calculator(self):
+    def calculation_main(self):
         # todo: it needed a wizard to take dates
-        petronad = self.env['sd_vcalculate_petronad.data'].calculate(self, date.today() - timedelta(days=30), date.today())
-        print(f'RRRRRRR> \n calculator: {self.calculator} petronad: {petronad}')
+        try:
+            if self.calculator:
+                self.calculation(self.calculator)
+            else:
+                logging.error(f'EEE Diagram calculation: select a calculator model')
+
+        except Exception as e:
+            logging.error(f'Diagram calculation: {e}')
+            raise ValidationError(_(f'Diagram calculation: {e}'))
+
+    def calculation(self, model):
+        try:
+            petronad = self.env[model.name].calculate(self, self.first_date, self.last_date)
+            print(f'EEE> \n calculator: {self.calculator} model: {model.name} petronad: {petronad}')
+        except Exception as e:
+            logging.error(f'Diagram calculation: {e}')
+            raise ValidationError(_(f'EEE Diagram calculation: {e}'))
 
     @api.model
     def create(self, vals):
+        print(f'######### diagram create vals: {vals}')
+
         res = super(SdVisualizeDiagram, self).create(vals)
         values_model = self.env['sd_visualize.values']
         location_module = self.env['sd_visualize.location']
@@ -53,7 +68,7 @@ class SdVisualizeDiagram(models.Model):
     # #########################################################################
     def write(self, vals):
         res = super(SdVisualizeDiagram, self).write(vals)
-        print(f'\n write vals: {vals}')
+        print(f'######### diagram write vals: {vals}')
         if vals.get("values", False):
             location_module = self.env['sd_visualize.location']
             locations = location_module.search([('diagram', '=', self._origin.id)])
@@ -155,6 +170,7 @@ class SdVisualizeDiagram(models.Model):
                              'diagram_id': location.get('diagram').id,
                              'name': location.get('value').display_name,
                              'value': location.get('value').value,
+                             'symbol': location.get('value').symbol,
                              # 'actual': location.get('value').progress_actual,
                              'point_x': location.get('point_x'),
                              'point_y': location.get('point_y'),
