@@ -20,7 +20,7 @@ class SdVisualizeDiagram(models.Model):
     last_date = fields.Date(default=lambda self: date.today())
     first_date = fields.Date(default=lambda self: date.today() - timedelta(days=30))
     update = fields.Boolean(default=False, compute='update_compute')
-    calculator = fields.Many2one('ir.model', groups='base.group_system' )
+    calculator = fields.Many2one('ir.model',  )
     # cal_function = fields.Many2one('sd_vcalculate.data', )
     image2 = fields.Binary( )
 
@@ -29,7 +29,6 @@ class SdVisualizeDiagram(models.Model):
         for rec in self:
             rec.update = True if rec.update == False else False
         self.calculation_main()
-        # print(f'---------------\n {dir(self)}\n')
 
     def calculation_main(self):
         # todo: it needed a wizard to take dates
@@ -44,9 +43,11 @@ class SdVisualizeDiagram(models.Model):
             raise ValidationError(_(f'Diagram calculation: {e}'))
 
     def calculation(self, model):
+        print(f'---------- 2')
         try:
-            petronad = self.env[model.name].calculate(self, self.first_date, self.last_date)
-            print(f'EEE> \n calculator: {self.calculator} model: {model.name} petronad: {petronad}')
+            # petronad = self.env[model.name].calculate(self, self.first_date, self.last_date)
+            # print(f'EEE> \n calculator: {self.calculator} model: {model.name} petronad: {petronad}')
+            pass
         except Exception as e:
             logging.error(f'Diagram calculation: {e}')
             raise ValidationError(_(f'EEE Diagram calculation: {e}'))
