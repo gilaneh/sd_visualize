@@ -203,7 +203,6 @@
                       (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
                                  Math.pow(event.pageY - event.y0, 2) | 0))
                         .toFixed(2) + 'px')
-//                        console.log('interact: point_x',point_x,'point_y',point_y)
 
                   }
                 }
