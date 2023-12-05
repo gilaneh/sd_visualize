@@ -240,6 +240,7 @@
                         let label = event.currentTarget.querySelector('.visualize_box_content_label');
                         label_checked ? label.classList.remove('d-none') : label.classList.add('d-none')
 
+
                         pointer[box_id]['point_label_show'] = label_checked;
                     }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
                         let value = event.originalEvent.srcElement.value;
@@ -407,6 +408,7 @@
                     boxContent.innerHTML = `
                         <div class="${boxNameClass}" >${value.name}</div>
                         <div >${value.value} ${value.symbol ? value.symbol : ""}</div>
+
                     `;
                     boxContent.classList.add('visualize_box_content', 'h-100');
                     boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
