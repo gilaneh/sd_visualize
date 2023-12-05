@@ -12,6 +12,7 @@
                     <field name="display_name" />
                     <field name="variable_name" />
                     <field name="value" />
+                    <field name="symbol" />
                     <field name="equation" />
                     <field name="calculate" widget="boolean_toggle"/>
 

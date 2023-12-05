@@ -14,12 +14,25 @@
 }
 .draggable_setting_div{
     position: absolute;
-    top: -110px;
+    top: -170px;
 //     right: -10px;
     font-size: 20px;
-    background-color: #ffffff70;
+    background-color: #ffffffe4;
     padding: 5px;
     border-radius: 5px;
+
+}
+
+.visualize_settings_label{
+    position: absolute;
+    top: -35px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #ffffffe4;
+    padding: 5px;
+    white-space: nowrap;
+    border-radius: 5px;
+    min-width: 200px;
 
 }
 // .draggable_font_color{
@@ -75,8 +88,8 @@
   border-radius: 10px;
   touch-action: none;
   user-select: none;
-  min-width: 50px;
-  min-height: 50px;
+  min-width: 100px;
+  min-height: 100px;
 //   transform: translate(0px, 0px);
 //   box-shadow: rgb(211, 211, 212) 0px 0px 15px;
 

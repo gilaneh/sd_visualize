@@ -6,6 +6,7 @@
     import FormView from 'web.FormView';
     import FormRenderer from 'web.FormRenderer';
     import viewRegistry from 'web.view_registry';
+    import session from 'web.session';
 
     let pointer = Object();
     let editMode = false
@@ -18,6 +19,19 @@
             'click .visualize_draggable_div': '_onClickDraggableDiv',
             'click .diagram_process_form_view_image ': '_onClickImage',
         },
+        start: function(){
+            let self = this;
+            return this._super.apply(this, arguments).then(function(){
+                $(document).keyup(function(ev){
+                    console.log(ev.key)
+                    if(ev.key === 'Escape'){
+                        self._clearDraggableDiv(ev);
+
+                    }
+                });
+            });
+
+        },
         _onClickImagePage: function(e){
             let self = this;
             setTimeout(function(){
@@ -25,14 +39,14 @@
                 if(saveButton){
                     saveButton.click();
                 }
-            }, 200);
-            setTimeout(function(){
-                let editButton = self.el.querySelector('.o_form_button_edit');
-                if(editButton){
-                    editButton.click();
-                    editMode = true;
-                }
             }, 400);
+//            setTimeout(function(){
+//                let editButton = self.el.querySelector('.o_form_button_edit');
+//                if(editButton){
+//                    editButton.click();
+//                    editMode = true;
+//                }
+//            }, 400);
         },
         saveRecord: function (recordID, options) {
             let self = this;
@@ -88,7 +102,7 @@
             /**
              * It hides all the settings div on the the page and then shows the current div
              */
-             console.log('_onClickDraggableSetting', ev);
+//             console.log('_onClickDraggableSetting', ev);
 
 //            document.querySelectorAll('.draggable_setting_div').forEach(el =>{
 //                el.classList.remove('d-none');
@@ -98,15 +112,16 @@
         },
         _clearDraggableDiv: function(ev){
             if(editMode){
-                console.log(ev)
-                console.log(ev.target.parentElement.classList.contains('diagram_process_form_view_image'))
-
                let setting_div =  document.querySelectorAll('.draggable_setting_div');
                setting_div.forEach(el =>{
                                         el.classList.remove('d-none');
                                         el.classList.add('d-none');
                                         })
-
+               let setting_label =  document.querySelectorAll('.visualize_settings_label');
+               setting_label.forEach(el =>{
+                                        el.classList.remove('d-none');
+                                        el.classList.add('d-none');
+                                        })
                let draggable_div =  document.querySelectorAll('.visualize_draggable_div');
                 draggable_div.forEach(el =>{
                                         el.classList.remove('draggable_zindex');
@@ -116,24 +131,30 @@
                 box_content.forEach(el =>{
                                         el.classList.remove('border', 'border-warning');
                                         })
+
             }
         },
         _onClickImage: function(ev){
-            if(ev.target.parentElement.classList.contains('diagram_process_form_view_image')){
+            if(editMode && ev.target.parentElement.classList.contains('diagram_process_form_view_image')){
                 this._clearDraggableDiv(ev);
                 let box_content =  document.querySelectorAll('.visualize_box_content');
                 box_content.forEach(el =>{
                                         el.classList.add('border', 'border-warning');
                                         })
+               let label_div =  document.querySelectorAll('.visualize_settings_label');
+               label_div.forEach(el =>{
+                                        el.classList.remove('d-none');
+                                        })
             }
         },
         _onClickDraggableDiv: function(ev){
             if(editMode ){
-                console.log(ev)
+//                console.log(ev)
                 this._clearDraggableDiv(ev);
                 ev.currentTarget.classList.add('draggable_zindex');
                 ev.currentTarget.childNodes[0].classList.remove('d-none');
-                ev.currentTarget.childNodes[1].classList.add('border', 'border-warning');
+                ev.currentTarget.childNodes[1].classList.remove('d-none');
+                ev.currentTarget.childNodes[2].classList.add('border', 'border-warning');
             }
         },
     });
@@ -148,6 +169,7 @@
             var res = this._super.apply(this, arguments);
 //            console.log('START, initialState', this.initialState.res_id)
 //            console.log('VisualizeDiagramProcessFormController', this)
+
             interact('.draggable_move')
                 .draggable({
                 // enable inertial throwing
@@ -216,7 +238,8 @@
                         console.log(event.currentTarget)
 
                         let label = event.currentTarget.querySelector('.visualize_box_content_label');
-                        label_checked ? label.classList.remove('visualize_box_content_no_label_p') : label.classList.add('visualize_box_content_no_label_p')
+                        label_checked ? label.classList.remove('d-none') : label.classList.add('d-none')
+
 
                         pointer[box_id]['point_label_show'] = label_checked;
                     }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
@@ -313,6 +336,8 @@
             if(data && data[0] != undefined && data[0].data[0] != undefined ){
                 let values = data[0].data[0].values
 //                console.log('values: ', values, Array.from(values))
+                  let session_rtl = session.user_context.lang == 'fa_IR' ? true : false;
+
                 values.forEach(value => {
                     pointer[value.loc_id] = value;
 //                    console.log(pointer, value)
@@ -322,9 +347,17 @@
                     if (editMode) {
                         containerDiv.classList.add('draggable_move');
 
+                       let labelDiv = document.createElement("div");
+                       labelDiv.innerHTML = `<div class="col-12" style="direction:${session_rtl ? 'rtl' : 'ltr'};">
+                       ${value.name}
+                       </div>`;
+                       labelDiv.classList.add('visualize_settings_label', 'border', 'border-info', 'text-dark', 'd-none', 'bg-info-light' );
+                       containerDiv.appendChild(labelDiv);
+
                         settingDiv.classList.add('draggable_setting_div', 'border', 'border-info', 'text-dark', 'd-none' )
                         containerDiv.appendChild(settingDiv);
                         settingDiv.innerHTML = `
+
                             <div class="row flex-nowrap">
                                 <div class="col-5">Font: </div>
                                 <div class="col-1"></div>
@@ -352,52 +385,16 @@
 
                         `;
 
-//                        //font color picker
-//                        let settingBox = document.createElement("div");
-//                        settingBox.id = `fontColor_${value.loc_id}`;
-//                        settingBox.classList.add('fa', 'fa-gear', 'draggable_setting')
-//                        settingBox.setAttribute('value', value.point_color);
-//                        div.appendChild(settingBox);
-//
-//                        settingDiv.classList.add('d-none', 'draggable_setting_div');
-//
-//
-////                        font color picker
-//                        let fontColor = document.createElement("input");
-//                        fontColor.type = 'color';
-//                        fontColor.id = `fontColor_${value.loc_id}`;
-//                        fontColor.classList.add('draggable_font_color')
-//                        fontColor.setAttribute('value', value.point_color);
-//                        settingDiv.appendChild(fontColor);
-
-                        //border color picker
-//                        let borderColor = document.createElement("input");
-//                        borderColor.type = 'color';
-//                        borderColor.id = `fontColor_${value.loc_id}`;
-//                        borderColor.classList.add('draggable_border_color')
-//                        borderColor.setAttribute('value', value.point_border);
-//                        settingDiv.appendChild(borderColor);
-
-                        //border show/hide
-//                        let border = document.createElement("input");
-//                        border.type = 'checkbox';
-//                        border.id = `fontColor_${value.loc_id}`;
-//                        border.classList.add('draggable_border_show')
-//                        console.log('point_border_show:',value.point_border_show);
-//                        border.checked =  value.point_border_show;
-//                        settingDiv.appendChild(border);
-
                         //font size slider
                        let fontSlider = document.createElement("input");
                        fontSlider.type = 'range';
                        fontSlider.id = `fontSlider_${value.loc_id}`;
                        fontSlider.classList.add('draggable_font_size');
                        fontSlider.setAttribute('value', value.point_size);
-                       fontSlider.setAttribute('step', '1');
+                       fontSlider.setAttribute('step', '5');
                        fontSlider.setAttribute('min', '10');
                        fontSlider.setAttribute('max', '100');
                        settingDiv.appendChild(fontSlider);
-
                        fontSlider.addEventListener('mouseleave', e => moveMode = false)
                     }
 
@@ -407,18 +404,14 @@
                     containerDiv.appendChild(boxContent);
 
 //                        todo: progress_plan?
+                    let boxNameClass = value.point_label_show ? 'visualize_box_content_label' : 'visualize_box_content_label d-none'
                     boxContent.innerHTML = `
-                        <div class="visualize_box_content_label" ><span class="progress_name1" >${value.name}</span></div>
-                        <div ><span class="progress_plan1" >${value.value}</div>
+                        <div class="${boxNameClass}" >${value.name}</div>
+                        <div >${value.value} ${value.symbol ? value.symbol : ""}</div>
+
                     `;
                     boxContent.classList.add('visualize_box_content', 'h-100');
-//                    if (editMode){
-//                        boxContent.classList.add('border', 'border-warning');
-//
-//                    }
-//                    boxContent.style.position = 'absolute';
-//                    boxContent.style.right = 'absolute';
-
+                    boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
 
                     containerDiv.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
                     containerDiv.style.width = value.point_w + 'px';
