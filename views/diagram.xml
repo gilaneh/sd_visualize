@@ -53,7 +53,9 @@
                                             <field name="calculate" widget="boolean_toggle"/>
                                             <field name="display_name"/>
                                             <field name="variable_name"/>
-                                            <field name="value"/>
+                                            <field name="display_type"/>
+                                            <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
+                                            <field name="image" widget="image" readonly='0' attrs="{'invisible':[('display_type', '=', 'data')]}"/>
                                             <field name="symbol"/>
                                             <field name="equation"/>
                                         </tree>

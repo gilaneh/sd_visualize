@@ -23,14 +23,9 @@
             let self = this;
             return this._super.apply(this, arguments).then(function(){
                 $(document).keyup(function(ev){
-                    console.log(ev.key)
-                    if(ev.key === 'Escape'){
-                        self._clearDraggableDiv(ev);
-
-                    }
+                    if(ev.key === 'Escape'){ self._clearDraggableDiv(ev);}
                 });
             });
-
         },
         _onClickImagePage: function(e){
             let self = this;
@@ -39,7 +34,7 @@
                 if(saveButton){
                     saveButton.click();
                 }
-            }, 400);
+            }, 100);
 //            setTimeout(function(){
 //                let editButton = self.el.querySelector('.o_form_button_edit');
 //                if(editButton){
@@ -404,11 +399,20 @@
 
 //                        todo: progress_plan?
                     let boxNameClass = value.point_label_show ? 'visualize_box_content_label' : 'visualize_box_content_label d-none'
+                    console.log('value.image',value.display_type,value.image)
+                    if(value.display_type == 'data'){
                     boxContent.innerHTML = `
                         <div class="${boxNameClass}" >${value.name}</div>
                         <div >${value.value} ${value.symbol ? value.symbol : ""}</div>
 
                     `;
+                    } else{
+                    boxContent.innerHTML = `
+                        <div class="${boxNameClass}" >${value.name}</div>
+                        <div class="p-0"><img class="container p-0" src="/web/image?model=sd_visualize.values&id=${value.value_id}&field=image"/></div>
+
+                    `;
+                    }
                     boxContent.classList.add('visualize_box_content', 'h-100');
                     boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
 
