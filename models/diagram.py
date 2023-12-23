@@ -21,6 +21,7 @@ class SdVisualizeDiagram(models.Model):
     first_date = fields.Date(default=lambda self: date.today() - timedelta(days=30))
     update = fields.Boolean(default=False, compute='update_compute')
     calculator = fields.Many2one('ir.model',  )
+    function_name = fields.Char()
     # cal_function = fields.Many2one('sd_vcalculate.data', )
     image2 = fields.Binary( )
 

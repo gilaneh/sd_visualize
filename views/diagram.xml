@@ -55,7 +55,8 @@
                                             <field name="variable_name"/>
                                             <field name="display_type"/>
                                             <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
-                                            <field name="image" widget="image" readonly='0' attrs="{'invisible':[('display_type', '=', 'data')]}"/>
+                                            <field name="image" widget="image" readonly='0' options="{'size': [30, 30],}"
+                                                   attrs="{'invisible':[('display_type', '=', 'data')]}"/>
                                             <field name="symbol"/>
                                             <field name="equation"/>
                                         </tree>
@@ -72,6 +73,7 @@
                                            options="{'no_create': True,'no_edit': True,'no_open': True,}"/>
 <!--                                    <field name="cal_function"-->
 <!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
+                                    <field name="function_name"/>
                                 </group>
                                 <group>
                                     <div groups="base.group_system">

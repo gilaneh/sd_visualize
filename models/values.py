@@ -13,7 +13,6 @@ class SdVisualizeValues(models.Model):
     _order = 'diagram asc'
     _rec_name = 'display_name'
 
-
     display_name = fields.Char(required=True, )
     display_type = fields.Selection([('data', 'Data'), ('image', 'Image')], default='data')
     variable_name = fields.Char(required=True, )
@@ -25,6 +24,7 @@ class SdVisualizeValues(models.Model):
     equation = fields.Char()
     calculate = fields.Boolean(default=False)
     sequence = fields.Integer(default=10)
+    code = fields.Text()
 
     def write(self, vals):
         # print(f'>>>>>>>>>>> [values  write]: {vals}')

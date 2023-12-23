@@ -2,11 +2,45 @@
     <data>
         <!-- ==================================================  sd_visualize.value ====================-->
 
+        <record model="ir.ui.view" id="sd_visualize_value_form">
+            <field name="name">value</field>
+            <field name="model">sd_visualize.values</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="diagram" />
+                                <field name="display_name" />
+                                <field name="variable_name" />
+                                <field name="value" />
+                                <field name="display_type" />
+
+                            </group>
+                            <group>
+                                <field name="image" widget="image"  options="{'zoom': True}"/>
+                                <field name="image_url" />
+                                <field name="symbol" />
+                                <field name="equation" />
+                                <field name="calculate" widget="boolean_toggle"/>
+
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="code">
+                                <field name="code" widget="ace" options="{'mode': 'python'}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
         <record model="ir.ui.view" id="sd_visualize_value_list">
             <field name="name">value</field>
             <field name="model">sd_visualize.values</field>
             <field name="arch" type="xml">
-                <tree editable="top">
+                <tree>
                     <field name="sequence" widget='handle'/>
                     <field name="diagram" />
                     <field name="display_name" />
