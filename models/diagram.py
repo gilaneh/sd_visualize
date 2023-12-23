@@ -129,11 +129,13 @@ class SdVisualizeDiagram(models.Model):
         return json.dumps('set_diagram_locations')
 
     # #########################################################################
-    def get_diagram_values(self, diagram_id=0):
+    def get_diagram_values(self, diagram_id=0, function_name=''):
         if diagram_id:
             diagram_id = diagram_id
         else:
             diagram_id = self._origin.id
+        # print(f'-------> function_name:\n {diagram_id}')
+        # print(f'-------> function_name:\n {function_name}')
 
         diagram = self.browse(diagram_id)
         if len(diagram) != 1:
@@ -164,6 +166,9 @@ class SdVisualizeDiagram(models.Model):
                                 'diagram': lo.diagram
                                 } for lo in locations])
         # print(f'\n locations_list: \n{locations_list}')
+
+        values = self.env['sd_vcalculate.data'].calculate(function_name, diagram_id )
+        print(f'--------> values: \n {values}')
 
         data = [{
             'id': diagram_id,

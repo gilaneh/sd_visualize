@@ -14,6 +14,22 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="sd_visualize_diagram_form_new">
+            <field name="name">Diagram New</field>
+            <field name="model">sd_visualize.diagram</field>
+            <field name="arch" type="xml">
+                <form js_class="visualize_process">
+                        <group>
+                            <group>
+                                <field name="update" invisible="1"/>
+                                <field name="name"/>
+                                <field name="project"/>
+                            </group>
+                        </group>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="sd_visualize_diagram_form">
             <field name="name">Diagram</field>
             <field name="model">sd_visualize.diagram</field>
@@ -129,6 +145,16 @@
             <field name="context">{'search_default_project_group': 1}</field>
         </record>
 
+        <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_new">
+            <field name="name">Diagram New</field>
+            <field name="res_model">sd_visualize.diagram</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_visualize_diagram_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_new')})]"/>
+            <field name="context">{'search_default_project_group': 1}</field>
+        </record>
+
         <!-- ==================================================  Menu ====================-->
 
 
@@ -136,6 +162,11 @@
                   id="sd_visualize.diagram_menu"
                   parent="sd_visualize.sd_visualize_root_menu"
                   action="sd_visualize.action_window_diagram"/>
+
+        <menuitem name="Diagram New"
+                  id="sd_visualize.diagram_new_menu"
+                  parent="sd_visualize.sd_visualize_root_menu"
+                  action="sd_visualize.action_window_diagram_new"/>
 
 
     </data>

@@ -313,10 +313,11 @@
         },
         _getLocation: function(){
             let self = this;
+            console.log('_getLocation', self.state)
             return self._rpc({
                                 model: 'sd_visualize.diagram',
                                 method: 'get_diagram_values',
-                                args: [self.state.res_id],
+                                args: [[], self.state.res_id, self.state.data.function_name],
                             })
                             .then(data => JSON.parse(data))
                             .then(data => data)

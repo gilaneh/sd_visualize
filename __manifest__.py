@@ -35,7 +35,9 @@
         # 'website.assets_editor': [
         #     'static/src/**/*',
         # ],
-
+        'web.assets_qweb': [
+            'sd_visualize/static/src/components/**/*.xml',
+        ],
         'web.assets_frontend': [
             'sd_visualize/static/src/css/style.scss',
             'sd_visualize/static/src/js/diagram_frontend.js'
@@ -48,6 +50,8 @@
             'sd_visualize/static/src/js/show_plots.js',
             'sd_visualize/static/src/lib/interactjs/interact.min.js',
             'sd_visualize/static/src/js/visualize_diagram_process.js',
+            'sd_visualize/static/src/components/**/*.js',
+
         ],
         'web.report_assets_common': [
             'sd_visualize/static/src/css/report_styles.css',
