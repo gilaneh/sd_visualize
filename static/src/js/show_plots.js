@@ -109,7 +109,7 @@ myPlot('my_plot');
 
 
                 const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
-                var localeReady = loadJS(url);
+//                var localeReady = loadJS(url);
                 Promise.all([localeReady])
                     .then(function(){
                         let project_id = self.state.data['project'].data.id;

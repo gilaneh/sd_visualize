@@ -179,7 +179,7 @@ class SdVisualizeDiagram(models.Model):
                              'value': location.get('value').value,
                              'symbol': location.get('value').symbol,
                              'display_type': location.get('value').display_type,
-                             'value_id': location.get('value').id if location.get('value').display_type == 'image' else 0,
+                             'value_id': location.get('value').id if location.get('value').display_type in ['image', 'chart'] else 0,
                              # 'actual': location.get('value').progress_actual,
                              'point_x': location.get('point_x'),
                              'point_y': location.get('point_y'),

@@ -14,7 +14,10 @@ class SdVisualizeValues(models.Model):
     _rec_name = 'display_name'
 
     display_name = fields.Char(required=True, )
-    display_type = fields.Selection([('data', 'Data'), ('image', 'Image')], default='data')
+    display_type = fields.Selection([('data', 'Data'),
+                                     ('image', 'Image'),
+                                     ('chart', 'Chart'),
+                                     ], default='data', required=True)
     variable_name = fields.Char(required=True, )
     value = fields.Char(default='0' )
     image = fields.Image()

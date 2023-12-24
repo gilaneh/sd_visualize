@@ -7,6 +7,8 @@
     import FormRenderer from 'web.FormRenderer';
     import viewRegistry from 'web.view_registry';
     import session from 'web.session';
+    import { loadJS } from "web.ajax";
+    const { onWillStart, useExternalListener, useRef, useSubEnv } = owl.hooks;
 
     let pointer = Object();
     let editMode = false
@@ -159,126 +161,32 @@
         /**
          * @override
          */
-         start: function(){
+        start: function(){
             let self = this;
             var res = this._super.apply(this, arguments);
-//            console.log('START, initialState', this.initialState.res_id)
-//            console.log('VisualizeDiagramProcessFormController', this)
+//            console.log('START',)
 
-            interact('.draggable_move')
-                .draggable({
-                // enable inertial throwing
-                inertia: true,
-                // keep the element within the area of it's parent
-                modifiers: [
-                  interact.modifiers.restrictRect({
-                    restriction: 'parent',
-                    endOnly: true
-                  })
-                ],
-                // enable autoScroll
-                autoScroll: true,
-
-                listeners: {
-                  // call this function on every dragmove event
-                  move (event){
-                    self._dragMoveListener(event);
-                  },
-
-                  // call this function on every dragend event
-                  end (event) {
-                    var textEl = event.target.querySelector('.drag-results')
-
-                    textEl && (textEl.innerText =
-                      'rect: ' + Math.round(event.rect.left) + ' x ' + Math.round(event.rect.top) +
-                      // '\npage: ' + Math.round(event.pageX) + ' x ' + Math.round(event.pageY) +
-                      // '\nclient: ' + Math.round(event.client.x) + ' x ' + Math.round(event.client.y) +
-                      // '\nx0: ' + Math.round(event.x0) + ' x ' + Math.round(event.y0) +
-                      // '\nmoved a distance of ' +
-                      (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
-                                 Math.pow(event.pageY - event.y0, 2) | 0))
-                        .toFixed(2) + 'px')
-
-                  }
-                }
-              })
-                .resizable({
-                    preserveAspectRatio: true,
-                    edges: { left: false, right: true, bottom: true, top: false }
-                })
-                .on('mouseover', function(event){
-                    if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
-                        moveMode = true;
-                    }
-
-                })
-                .on('input', function(event){
-                    const box_id = Number(event.currentTarget.id.replace('data_box_', ''));
-                    if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
-                        let value = Number(event.originalEvent.srcElement.value);
-                        event.currentTarget.style.fontSize = value + 'px';
-                            pointer[box_id]['point_size'] = value;
-                    } else if (event.originalEvent.srcElement.classList.contains('draggable_font_color')){
-                        let value = event.originalEvent.srcElement.value;
-                        event.currentTarget.style.color = value;
-                        pointer[box_id]['point_color'] = value;
-                    } else if (event.originalEvent.srcElement.classList.contains('draggable_border_show')){
-                        const border_checked = event.originalEvent.srcElement.checked;
-                        event.currentTarget.style.borderWidth =  border_checked ? '5px' : '0px';
-                        pointer[box_id]['point_border_show'] = border_checked;
-                    } else if (event.originalEvent.srcElement.classList.contains('visualize_box_content_no_label')){
-                        const label_checked = event.originalEvent.srcElement.checked;
-//                        console.log(event)
-                        console.log(event.currentTarget)
-
-                        let label = event.currentTarget.querySelector('.visualize_box_content_label');
-                        label_checked ? label.classList.remove('d-none') : label.classList.add('d-none')
-
-
-                        pointer[box_id]['point_label_show'] = label_checked;
-                    }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
-                        let value = event.originalEvent.srcElement.value;
-                        event.currentTarget.style.borderColor = value;
-                            pointer[box_id]['point_border'] = value;
-                    }
-                })
-                .on('resizemove', function (event) {
-                    if(moveMode){
-                        return
-                    }
-                    const box_id = Number(event.target.id.replace('data_box_', ''));
-                    var target = event.target;
-//                        x = (parseFloat(target.getAttribute('data-x')) || localStorage.getItem('x')),
-//                        y = (parseFloat(target.getAttribute('data-y')) || localStorage.getItem('y'));
-//                        console.log(Math.round(x), Math.round(parseFloat(target.getAttribute('data-x'))), Math.round(event.dx),localStorage.getItem('x'))
-
-                    // update the element's style
-                    target.style.width  = event.rect.width + 'px';
-                    target.style.height = event.rect.height + 'px';
-
-                    // translate when resizing from top or left edges
-//                    x += event.deltaRect.left;
-//                    y += event.deltaRect.top;
-                    pointer[box_id]['point_w'] = Math.round(event.rect.width);
-                    pointer[box_id]['point_h'] = Math.round(event.rect.height);
-
-                    // localStorage.setItem('x', x)
-                    // localStorage.setItem('y', y)
-                    // target.style.webkitTransform = target.style.transform =
-                    //     'translate(' + x + 'px,' + y + 'px)';
-
-                    // target.setAttribute('data-x', x);
-                    // target.setAttribute('data-y', y);
-//                    target.style.fontSize = .15 * event.rect.width + 'px';
-//                    localStorage.setItem('width', event.rect.width + 'px')
-//                    localStorage.setItem('height', event.rect.height + 'px')
-//                    localStorage.setItem('fontSize', target.style.fontSize)
-                    // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
-                    // target.textContent = event.rect.width + '×' + event.rect.height;
-                    });
-            // this function is used later in the resizing and gesture demos
-//            self.dragMoveListener = self._dragMoveListener
+            this._interact();
             return res
+        },
+        _render(){
+            var res = this._super.apply(this, arguments);
+//            console.log('_render', )
+
+            try {
+                Plotly
+            } catch (e) {
+//                console.log('Plotly is not laded yet');
+                const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+                var localeReady = loadJS(url);
+                Promise.all([localeReady])
+                    .then(function(){
+//                        console.log('Plotly loaded')
+                    })
+                    .catch(e => console.log('loading plotly:', e));
+                }
+            return res
+
         },
         _dragMoveListener: function(event) {
             if(moveMode){
@@ -313,7 +221,7 @@
         },
         _getLocation: function(){
             let self = this;
-            console.log('_getLocation', self.state)
+//            console.log('_getLocation', self.state)
             return self._rpc({
                                 model: 'sd_visualize.diagram',
                                 method: 'get_diagram_values',
@@ -328,6 +236,8 @@
             let diagram = self.el.querySelector('.diagram_process_form_view_image');
             let diagramImage = diagram.querySelector('img');
             diagramImage.classList.remove('img-fluid');
+            let chartBox = '';
+            let chartBoxList = Object();
             if(data && data[0] != undefined && data[0].data[0] != undefined ){
                 let values = data[0].data[0].values
 //                console.log('values: ', values, Array.from(values))
@@ -397,24 +307,38 @@
                     containerDiv.id = `data_box_${value.loc_id}`;
                     let boxContent = document.createElement("div");
                     containerDiv.appendChild(boxContent);
+//                    console.log('value', value)
 
 //                        todo: progress_plan?
                     let boxNameClass = value.point_label_show ? 'visualize_box_content_label' : 'visualize_box_content_label d-none'
-                    console.log('value.image',value.display_type,value.image)
+//                    console.log('value.image',value.display_type,value.image)
                     if(value.display_type == 'data'){
                     boxContent.innerHTML = `
                         <div class="${boxNameClass}" >${value.name}</div>
                         <div >${value.value} ${value.symbol ? value.symbol : ""}</div>
 
                     `;
-                    } else{
+                    } else if (value.display_type == 'chart'){
+                    boxContent.innerHTML = `
+                        <div class="${boxNameClass}" >${value.name}</div>
+                        <div id="chart_${value.value_id}" class="chart_box p-0" > </div>
+                    `;
+                    Plotly.newPlot(`chart_${value.value_id}`,
+                                    JSON.parse(value.value),
+                                    {autosize: false,  width: value.point_w, height: value.point_h,
+                                        xaxis: {fixedrange: true}, yaxis: {fixedrange: true},
+                                        background: {color: 'red'},
+                                        font: {size: value.point_size, color: value.point_color,}},
+                                    {responsive: true, displayModeBar: false} )
+                    } else if (value.display_type == 'image'){
                     boxContent.innerHTML = `
                         <div class="${boxNameClass}" >${value.name}</div>
                         <div class="p-0"><img class="container p-0" src="/web/image?model=sd_visualize.values&id=${value.value_id}&field=image"/></div>
 
                     `;
                     }
-                    boxContent.classList.add('visualize_box_content', 'h-100');
+//                    boxContent.classList.add( 'h-100', 'w-100');
+                    boxContent.classList.add('visualize_box_content', 'h-100', );
                     boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
 
                     containerDiv.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
@@ -430,11 +354,139 @@
             }
             let draggable_moves = self.el.querySelectorAll('draggable_move')
          },
-         _fontSlider: function(fontSlider){
+        _fontSlider: function(fontSlider){
             fontSlider.addEventListener('change', e => {
                 console.log(e.currentTarget.value);
             })
          },
+        _interact: function(){
+            let self = this;
+            let moveCounter = 0;
+            interact('.draggable_move')
+            .draggable({
+            // enable inertial throwing
+            inertia: true,
+            // keep the element within the area of it's parent
+            modifiers: [
+              interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+              })
+            ],
+            // enable autoScroll
+            autoScroll: true,
+
+            listeners: {
+              // call this function on every dragmove event
+              move (event){
+                self._dragMoveListener(event);
+              },
+
+              // call this function on every dragend event
+              end (event) {
+                var textEl = event.target.querySelector('.drag-results')
+
+                textEl && (textEl.innerText =
+                  'rect: ' + Math.round(event.rect.left) + ' x ' + Math.round(event.rect.top) +
+                  // '\npage: ' + Math.round(event.pageX) + ' x ' + Math.round(event.pageY) +
+                  // '\nclient: ' + Math.round(event.client.x) + ' x ' + Math.round(event.client.y) +
+                  // '\nx0: ' + Math.round(event.x0) + ' x ' + Math.round(event.y0) +
+                  // '\nmoved a distance of ' +
+                  (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
+                             Math.pow(event.pageY - event.y0, 2) | 0))
+                    .toFixed(2) + 'px')
+
+              }
+            }
+          })
+            .resizable({
+                preserveAspectRatio: true,
+                edges: { left: false, right: true, bottom: true, top: false }
+            })
+            .on('mouseover', function(event){
+                if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
+                    moveMode = true;
+                }
+
+            })
+            .on('input', function(event){
+                const box_id = Number(event.currentTarget.id.replace('data_box_', ''));
+                    const chartBox = event.currentTarget.children[2].children[1]
+                if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
+                    let value = Number(event.originalEvent.srcElement.value);
+                    event.currentTarget.style.fontSize = value + 'px';
+
+                    if(chartBox && chartBox.classList.contains('chart_box')){
+                        Plotly.relayout(chartBox, {font: {size: value} })
+                    }
+                    pointer[box_id]['point_size'] = value;
+                } else if (event.originalEvent.srcElement.classList.contains('draggable_font_color')){
+                    let value = event.originalEvent.srcElement.value;
+                    event.currentTarget.style.color = value;
+//                    todo: changing the color is changing the size to its last saved value and vice versa
+//                    if(chartBox && chartBox.classList.contains('chart_box')){
+//                        Plotly.relayout(chartBox, {font: {color: value} })
+//                    }
+                    pointer[box_id]['point_color'] = value;
+                } else if (event.originalEvent.srcElement.classList.contains('draggable_border_show')){
+                    const border_checked = event.originalEvent.srcElement.checked;
+                    event.currentTarget.style.borderWidth =  border_checked ? '5px' : '0px';
+                    pointer[box_id]['point_border_show'] = border_checked;
+                } else if (event.originalEvent.srcElement.classList.contains('visualize_box_content_no_label')){
+                    const label_checked = event.originalEvent.srcElement.checked;
+
+                    let label = event.currentTarget.querySelector('.visualize_box_content_label');
+                    label_checked ? label.classList.remove('d-none') : label.classList.add('d-none')
+
+                    pointer[box_id]['point_label_show'] = label_checked;
+                }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
+                    let value = event.originalEvent.srcElement.value;
+                    event.currentTarget.style.borderColor = value;
+                        pointer[box_id]['point_border'] = value;
+                }
+            })
+            .on('resizemove', function (event) {
+                if(moveMode){
+                    return
+                }
+                const box_id = Number(event.target.id.replace('data_box_', ''));
+                var target = event.target;
+//                        x = (parseFloat(target.getAttribute('data-x')) || localStorage.getItem('x')),
+//                        y = (parseFloat(target.getAttribute('data-y')) || localStorage.getItem('y'));
+//                        console.log(Math.round(x), Math.round(parseFloat(target.getAttribute('data-x'))), Math.round(event.dx),localStorage.getItem('x'))
+//                const chartBox = event.target.querySelector('.chart_box')
+                const chartBox = event.target.children[2].children[1]
+//                console.log(event, event.target, chartBox)
+                if(++moveCounter == 3 && chartBox.classList.contains('chart_box')){
+                    moveCounter = 0;
+                    Plotly.relayout(chartBox, {width: event.rect.width, height: event.rect.height  })
+                }
+
+                // update the element's style
+                target.style.width  = event.rect.width + 'px';
+                target.style.height = event.rect.height + 'px';
+
+                // translate when resizing from top or left edges
+//                    x += event.deltaRect.left;
+//                    y += event.deltaRect.top;
+                pointer[box_id]['point_w'] = Math.round(event.rect.width);
+                pointer[box_id]['point_h'] = Math.round(event.rect.height);
+
+                // localStorage.setItem('x', x)
+                // localStorage.setItem('y', y)
+                // target.style.webkitTransform = target.style.transform =
+                //     'translate(' + x + 'px,' + y + 'px)';
+
+                // target.setAttribute('data-x', x);
+                // target.setAttribute('data-y', y);
+//                    target.style.fontSize = .15 * event.rect.width + 'px';
+//                    localStorage.setItem('width', event.rect.width + 'px')
+//                    localStorage.setItem('height', event.rect.height + 'px')
+//                    localStorage.setItem('fontSize', target.style.fontSize)
+                // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
+                // target.textContent = event.rect.width + '×' + event.rect.height;
+                });
+        },
 
     });
 

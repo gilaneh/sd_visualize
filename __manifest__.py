@@ -44,7 +44,7 @@
         ],
         'web.assets_backend': [
             'sd_visualize/static/src/css/style.scss',
-            'sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js',
+            # 'sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js',
             # 'sd_visualize/static/src/css/styles.css',
             'sd_visualize/static/src/js/plot.js',
             'sd_visualize/static/src/js/show_plots.js',
