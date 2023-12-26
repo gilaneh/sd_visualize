@@ -167,7 +167,7 @@ class SdVisualizeDiagram(models.Model):
                                 } for lo in locations])
         # print(f'\n locations_list: \n{locations_list}')
 
-        values = self.env['sd_vcalculate.data'].calculate(function_name, diagram_id )
+        values = self.env['sd_visualize.calculate'].calculate(function_name, diagram_id )
         print(f'--------> values: \n {values}')
 
         data = [{

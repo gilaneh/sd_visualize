@@ -171,7 +171,7 @@
         },
         _render(){
             var res = this._super.apply(this, arguments);
-//            console.log('_render', )
+            console.log('_render', typeof Plotly)
 
             try {
                 Plotly
@@ -185,8 +185,14 @@
                     })
                     .catch(e => console.log('loading plotly:', e));
                 }
+//                this._sleep(3000)
+//                console.log('Plotly wait to load')
+
             return res
 
+        },
+        _sleep:function(ms){
+            new Promise(r => setTimeout(r, ms));
         },
         _dragMoveListener: function(event) {
             if(moveMode){
@@ -216,7 +222,6 @@
             let self = this;
             setTimeout(function(){
                 self._getLocation().then(data => self._createBoxes(data));
-
             }, 100)
         },
         _getLocation: function(){
@@ -323,6 +328,8 @@
                         <div class="${boxNameClass}" >${value.name}</div>
                         <div id="chart_${value.value_id}" class="chart_box p-0" > </div>
                     `;
+                    console.log('boxing:', typeof Plotly)
+                    typeof Plotly == 'undefined' ? '' :
                     Plotly.newPlot(`chart_${value.value_id}`,
                                     JSON.parse(value.value),
                                     {autosize: false,  width: value.point_w, height: value.point_h,

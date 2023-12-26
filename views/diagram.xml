@@ -85,8 +85,8 @@
                         <page string="Calculator">
                             <group>
                                 <group>
-                                    <field name="calculator" domain="[('name', 'like', 'sd_vcal' )]"
-                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>
+<!--                                    <field name="calculator" domain="[('name', 'like', 'sd_vcal' )]"-->
+<!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
 <!--                                    <field name="cal_function"-->
 <!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
                                     <field name="function_name"/>
