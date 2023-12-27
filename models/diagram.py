@@ -70,7 +70,7 @@ class SdVisualizeDiagram(models.Model):
     # #########################################################################
     def write(self, vals):
         res = super(SdVisualizeDiagram, self).write(vals)
-        print(f'######### diagram write vals: {vals}')
+        print(f'######### diagram write vals: \n{vals}\n')
         if vals.get("values", False):
             location_module = self.env['sd_visualize.location']
             locations = location_module.search([('diagram', '=', self._origin.id)])
@@ -191,7 +191,7 @@ class SdVisualizeDiagram(models.Model):
                              'point_label_show': location.get('point_label_show'),
                              'point_border_show': location.get('point_border_show'),
                              'point_border_width': location.get('point_border_width'),
-                             } for location in locations_list])
+                             } for location in locations_list if location.get('value').display ])
         }]
 
         return json.dumps([{'data': data, }])

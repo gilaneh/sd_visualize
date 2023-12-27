@@ -19,12 +19,13 @@ class SdVisualizeValues(models.Model):
                                      ('chart', 'Chart'),
                                      ], default='data', required=True)
     variable_name = fields.Char(required=True, )
-    value = fields.Char(default='0' )
+    value = fields.Text(default='0' )
     image = fields.Image()
     image_url = fields.Char()
     symbol = fields.Char( )
     diagram = fields.Many2one('sd_visualize.diagram', default=lambda self: self.env.context.get('diagram'))
     equation = fields.Char()
+    display = fields.Boolean(default=True)
     calculate = fields.Boolean(default=False)
     sequence = fields.Integer(default=10)
     code = fields.Text()
@@ -36,6 +37,12 @@ class SdVisualizeValues(models.Model):
 
     @api.model
     def create(self, vals):
-        # print(f'>>>>>>  [values create]: {vals}')
-        return super(SdVisualizeValues, self).create(vals)
+        res = super(SdVisualizeValues, self).create(vals)
+        location_module = self.env['sd_visualize.location']
+        loc = location_module.create({'diagram': vals.get('diagram'), 'value_id': res.id})
+
+        print(f'>>>>>>  [values create]:\n {vals} \n '
+              f'res.id: {res.id} loc: {loc}\n'
+              )
+        return res
 

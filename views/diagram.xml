@@ -66,6 +66,7 @@
                                         <tree editable="bottom" delete="0" >
                                             <field name="diagram" invisible="1" />
                                             <field name="sequence" widget='handle'/>
+                                            <field name="display" widget="boolean_toggle"/>
                                             <field name="calculate" widget="boolean_toggle"/>
                                             <field name="display_name"/>
                                             <field name="variable_name"/>
@@ -163,10 +164,10 @@
                   parent="sd_visualize.sd_visualize_root_menu"
                   action="sd_visualize.action_window_diagram"/>
 
-        <menuitem name="Diagram New"
-                  id="sd_visualize.diagram_new_menu"
-                  parent="sd_visualize.sd_visualize_root_menu"
-                  action="sd_visualize.action_window_diagram_new"/>
+<!--        <menuitem name="Diagram New"-->
+<!--                  id="sd_visualize.diagram_new_menu"-->
+<!--                  parent="sd_visualize.sd_visualize_root_menu"-->
+<!--                  action="sd_visualize.action_window_diagram_new"/>-->
 
 
     </data>

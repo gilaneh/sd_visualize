@@ -9,7 +9,7 @@
                 <tree editable="top">
 <!--                    <field name="id" />-->
                     <field name="diagram" />
-<!--                    <field name="task_id" />-->
+                    <field name="value_id" />
                     <field name="point_x"/>
                     <field name="point_y"/>
                     <field name="point_w"/>
