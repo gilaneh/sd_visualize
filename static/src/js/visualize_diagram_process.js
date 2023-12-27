@@ -328,15 +328,18 @@
                         <div class="${boxNameClass}" >${value.name}</div>
                         <div id="chart_${value.value_id}" class="chart_box p-0" > </div>
                     `;
-                    console.log('boxing:', typeof Plotly)
+                    let plot_value = JSON.parse(value.value);
+                    console.log('boxing:', plot_value)
+                    let plot_config = plot_value.config || {}
+                    let plot_layout = plot_value.layout || {}
+                    if (plot_layout){
+                        plot_layout['width'] =  value.point_w
+                        plot_layout['height'] =  value.point_h
+                        plot_layout['font'] =  {size: value.point_size, color: value.point_color,}
+                    }
+
                     typeof Plotly == 'undefined' ? '' :
-                    Plotly.newPlot(`chart_${value.value_id}`,
-                                    JSON.parse(value.value),
-                                    {autosize: false,  width: value.point_w, height: value.point_h,
-                                        xaxis: {fixedrange: true}, yaxis: {fixedrange: true},
-                                        background: {color: 'red'},
-                                        font: {size: value.point_size, color: value.point_color,}},
-                                    {responsive: true, displayModeBar: false} )
+                        Plotly.newPlot(`chart_${value.value_id}`, plot_value.data, plot_layout, plot_config)
                     } else if (value.display_type == 'image'){
                     boxContent.innerHTML = `
                         <div class="${boxNameClass}" >${value.name}</div>
@@ -494,6 +497,16 @@
                 // target.textContent = event.rect.width + '×' + event.rect.height;
                 });
         },
+        _parseBooleansInObj: function (object) {
+            const newObject = { ...object };
+            Object.keys(newObject)
+            .forEach((objKey) => {
+              let value = newObject[objKey];
+              value = (value === 'true' ? true : value === 'false' ? false : value);
+              newObject[objKey] = value;
+            });
+            return newObject;
+            }
 
     });
 
