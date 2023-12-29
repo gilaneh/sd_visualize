@@ -40,15 +40,19 @@
             btn_print_pdf.classList.remove('btn-success', 'btn-dark')
             if (window.devicePixelRatio < 1.3){
                 btn_print_pdf.classList.add('btn-dark')
+                btn_print_pdf.title = 'Zoom out the browser'
                 return false
             }
             btn_print_pdf.classList.add('btn-success')
+            btn_print_pdf.title = 'Take a snapshot'
+
             return true
         },
         _print_pdf: function(e){
             if (!this._print_pdf_button()){return}
 
             html2canvas(document.querySelector(".diagram_process_form_view_image")).then(canvas => {
+
                 let img = canvas.toDataURL("image/png", 1);
                 let img_el = document.createElement('img')
                 img_el.src = img;
@@ -60,6 +64,8 @@
                 document.body.appendChild(a_el)
                 a_el.click()
                 a_el.remove()
+
+
             });
         },
         _onClickImagePage: function(e){

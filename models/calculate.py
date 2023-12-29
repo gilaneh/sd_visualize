@@ -9,7 +9,8 @@ class SdVisualizeCalculate(models.Model):
     _name = 'sd_visualize.calculate'
 
     def calculate(self, function_name, diagram_id):
-        # print(f'------>  Calculate: {function_name} diagram_id: {diagram_id}')
+        # print(f'------>\n  Calculate: {self.env.context} diagram_id: {diagram_id}\n ')
+
         return {}
 
     def float_num(self, num, points=2):

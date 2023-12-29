@@ -30,6 +30,7 @@
         'views/diagram.xml',
         'views/location.xml',
         'views/values.xml',
+        'wizard/diagram_date_wizard.xml',
     ],
     'assets': {
         # 'website.assets_editor': [

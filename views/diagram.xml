@@ -36,7 +36,6 @@
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
-<!--                        <button name="print_pdf" string="PDF" type="object" class="btn btn-success mx-1 btn_print_pdf"></button>-->
                     </header>
                         <group>
                             <group>
@@ -45,8 +44,9 @@
                                 <field name="project"/>
                             </group>
                             <group>
-                                <field name="first_date" readonly="1" />
-                                <field name="last_date" readonly="1"/>
+                        <button name="%(sd_visualize.diagram_date_wizard_action)d" string="Select Date" type="action" class="btn btn-primary"></button>
+<!--                                <field name="first_date" readonly="1" />-->
+<!--                                <field name="last_date" readonly="1"/>-->
                             </group>
                         </group>
                     <notebook>
@@ -57,7 +57,7 @@
 <!--                            </div >-->
 
 <!--                            </group>-->
-                        <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf"><i class="fa fa-camera"></i></div>
+                        <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
 
                                 <div class="text-center">
                                 <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>

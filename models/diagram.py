@@ -17,6 +17,7 @@ class SdVisualizeDiagram(models.Model):
     project = fields.Many2one('project.project', )
     values = fields.Many2many('sd_visualize.values', required=False, )
     image = fields.Image(required=True, )
+    select_date = fields.Date(default=lambda self: date.today(), store=False)
     last_date = fields.Date(default=lambda self: date.today())
     first_date = fields.Date(default=lambda self: date.today() - timedelta(days=30))
     update = fields.Boolean(default=False, compute='update_compute')
