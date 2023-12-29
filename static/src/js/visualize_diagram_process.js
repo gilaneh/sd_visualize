@@ -20,13 +20,46 @@
             'click .draggable_setting': '_onClickDraggableSetting',
             'click .visualize_draggable_div': '_onClickDraggableDiv',
             'click .diagram_process_form_view_image ': '_onClickImage',
+            'click .btn_print_pdf ': '_print_pdf',
         },
         start: function(){
             let self = this;
+            onresize = (e) => { self._print_pdf_button()}
+
             return this._super.apply(this, arguments).then(function(){
                 $(document).keyup(function(ev){
                     if(ev.key === 'Escape'){ self._clearDraggableDiv(ev);}
                 });
+            self._print_pdf_button()
+
+            });
+
+        },
+        _print_pdf_button: function(){
+            let btn_print_pdf = this.el.querySelector('.btn_print_pdf')
+            btn_print_pdf.classList.remove('btn-success', 'btn-dark')
+            if (window.devicePixelRatio < 1.3){
+                btn_print_pdf.classList.add('btn-dark')
+                return false
+            }
+            btn_print_pdf.classList.add('btn-success')
+            return true
+        },
+        _print_pdf: function(e){
+            if (!this._print_pdf_button()){return}
+
+            html2canvas(document.querySelector(".diagram_process_form_view_image")).then(canvas => {
+                let img = canvas.toDataURL("image/png", 1);
+                let img_el = document.createElement('img')
+                img_el.src = img;
+                let a_el = document.createElement('a')
+                a_el.href = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                // todo: download name must be generated based on report name and its date
+                a_el.download = 'report.png'
+                a_el.appendChild(img_el)
+                document.body.appendChild(a_el)
+                a_el.click()
+                a_el.remove()
             });
         },
         _onClickImagePage: function(e){
@@ -176,17 +209,20 @@
             try {
                 Plotly
             } catch (e) {
-//                console.log('Plotly is not laded yet');
                 const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
                 var localeReady = loadJS(url);
                 Promise.all([localeReady])
-                    .then(function(){
-//                        console.log('Plotly loaded')
-                    })
                     .catch(e => console.log('loading plotly:', e));
                 }
-//                this._sleep(3000)
-//                console.log('Plotly wait to load')
+            try {
+                html2canvas
+            } catch (e) {
+                const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
+                var localeReady = loadJS(url);
+                Promise.all([localeReady])
+                    .catch(e => console.log('loading html2canvas:', e));
+                }
+
 
             return res
 
@@ -329,7 +365,7 @@
                         <div id="chart_${value.value_id}" class="chart_box p-0" > </div>
                     `;
                     let plot_value = JSON.parse(value.value);
-                    console.log('boxing:', plot_value)
+//                    console.log('boxing:', plot_value)
                     let plot_config = plot_value.config || {}
                     let plot_layout = plot_value.layout || {}
                     if (plot_layout){

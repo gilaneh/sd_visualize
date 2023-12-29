@@ -25,6 +25,9 @@ class SdVisualizeDiagram(models.Model):
     # cal_function = fields.Many2one('sd_vcalculate.data', )
     image2 = fields.Binary( )
 
+    def print_pdf(self):
+        pass
+
     @api.depends('name')
     def update_compute(self):
         for rec in self:

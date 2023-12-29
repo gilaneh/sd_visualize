@@ -35,6 +35,9 @@
             <field name="model">sd_visualize.diagram</field>
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_process_form_view">
+                    <header>
+<!--                        <button name="print_pdf" string="PDF" type="object" class="btn btn-success mx-1 btn_print_pdf"></button>-->
+                    </header>
                         <group>
                             <group>
                                 <field name="update" invisible="1"/>
@@ -54,6 +57,7 @@
 <!--                            </div >-->
 
 <!--                            </group>-->
+                        <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf"><i class="fa fa-camera"></i></div>
 
                                 <div class="text-center">
                                 <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
