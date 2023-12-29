@@ -8,7 +8,7 @@
     import viewRegistry from 'web.view_registry';
     import session from 'web.session';
     import { loadJS } from "web.ajax";
-    const { onWillStart, useExternalListener, useRef, useSubEnv } = owl.hooks;
+    const { onMounted, onWillUnmount, onWillStart, useExternalListener, useRef, useSubEnv } = owl.hooks;
 
     let pointer = Object();
     let editMode = false
@@ -24,19 +24,39 @@
         },
         start: function(){
             let self = this;
+              console.log('start')
+
             onresize = (e) => { self._print_pdf_button()}
 
+//                window.addEventListener("resize", self._print_pdf_button);
+
+//            onMounted(()=>{
+//                window.addEventListener("resize", self._print_pdf_button);
+////                this.updateSize();
+//                  self._print_pdf_button()
+//                  console.log('addEventListener("resize"')
+//
+//            }
+//            );
+//            onWillUnmount(()=>{
+//            window.removeEventListener("resize", self._print_pdf_button)
+//            console.log('removeEventListener("resize"')
+//            });
             return this._super.apply(this, arguments).then(function(){
                 $(document).keyup(function(ev){
                     if(ev.key === 'Escape'){ self._clearDraggableDiv(ev);}
                 });
-            self._print_pdf_button()
+
+                self._print_pdf_button()
 
             });
 
         },
+
         _print_pdf_button: function(){
+//            console.log('_print_pdf_button', this)
             let btn_print_pdf = this.el.querySelector('.btn_print_pdf')
+            if (!btn_print_pdf){return}
             btn_print_pdf.classList.remove('btn-success', 'btn-dark')
             if (window.devicePixelRatio < 1.3){
                 btn_print_pdf.classList.add('btn-dark')
