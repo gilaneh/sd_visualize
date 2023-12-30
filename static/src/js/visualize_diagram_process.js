@@ -20,28 +20,12 @@
             'click .draggable_setting': '_onClickDraggableSetting',
             'click .visualize_draggable_div': '_onClickDraggableDiv',
             'click .diagram_process_form_view_image ': '_onClickImage',
-            'click .btn_print_pdf ': '_print_pdf',
+//            'click .btn_print_pdf ': '_print_pdf',
         },
         start: function(){
             let self = this;
-              console.log('start')
-
-            onresize = (e) => { self._print_pdf_button()}
-
-//                window.addEventListener("resize", self._print_pdf_button);
-
-//            onMounted(()=>{
-//                window.addEventListener("resize", self._print_pdf_button);
-////                this.updateSize();
-//                  self._print_pdf_button()
-//                  console.log('addEventListener("resize"')
-//
-//            }
-//            );
-//            onWillUnmount(()=>{
-//            window.removeEventListener("resize", self._print_pdf_button)
-//            console.log('removeEventListener("resize"')
-//            });
+//              console.log('Controller start')
+//            onresize = (e) => { self._print_pdf_button()}
             return this._super.apply(this, arguments).then(function(){
                 $(document).keyup(function(ev){
                     if(ev.key === 'Escape'){ self._clearDraggableDiv(ev);}
@@ -50,9 +34,7 @@
                 self._print_pdf_button()
 
             });
-
         },
-
         _print_pdf_button: function(){
 //            console.log('_print_pdf_button', this)
             let btn_print_pdf = this.el.querySelector('.btn_print_pdf')
@@ -216,21 +198,33 @@
     });
 
     var VisualizeDiagramProcessRenderer = FormRenderer.extend({
-
+        events: {
+            'click .btn_print_pdf ': '_print_pdf',
+        },
         /**
          * @override
          */
         start: function(){
             let self = this;
             var res = this._super.apply(this, arguments);
-//            console.log('START',)
+            console.log('Render start',)
+            onMounted(()=>{
+                window.addEventListener("resize", self._print_pdf_button);
+//                this.updateSize();
+                  self._print_pdf_button()
+                  console.log('Render start onMounted')
+            });
+            onWillUnmount(()=>{
+            window.removeEventListener("resize", self._print_pdf_button)
+                  console.log('Render start onWillUnmount')
+            });
 
             this._interact();
             return res
         },
         _render(){
             var res = this._super.apply(this, arguments);
-            console.log('_render', typeof Plotly)
+            console.log('Render _render')
 
             try {
                 Plotly
@@ -252,6 +246,44 @@
 
             return res
 
+        },
+//        _print_pdf: function(e){
+//            console.log('_render _print_pdf')
+//        },
+        _print_pdf_button: function(){
+            let btn_print_pdf = document.querySelector('.btn_print_pdf')
+//            console.log('_print_pdf_button',btn_print_pdf,  window)
+            if (!btn_print_pdf){return}
+            btn_print_pdf.classList.remove('btn-success', 'btn-dark')
+            if (window.devicePixelRatio < 1.3){
+                btn_print_pdf.classList.add('btn-dark')
+                btn_print_pdf.title = 'Zoom out the browser'
+                return false
+            }
+            btn_print_pdf.classList.add('btn-success')
+            btn_print_pdf.title = 'Take a snapshot'
+
+            return true
+        },
+        _print_pdf: function(e){
+            if (!this._print_pdf_button()){return}
+
+            html2canvas(document.querySelector(".diagram_process_form_view_image"),{logging: false}).then(canvas => {
+
+                let img = canvas.toDataURL("image/png", 1);
+                let img_el = document.createElement('img')
+                img_el.src = img;
+                let a_el = document.createElement('a')
+                a_el.href = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                // todo: download name must be generated based on report name and its date
+                a_el.download = 'report.png'
+                a_el.appendChild(img_el)
+                document.body.appendChild(a_el)
+                a_el.click()
+                a_el.remove()
+
+
+            });
         },
         _sleep:function(ms){
             new Promise(r => setTimeout(r, ms));

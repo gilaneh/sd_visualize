@@ -36,8 +36,28 @@
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
+<!--                            <button name="%(action_window_diagram_full)d" type="action" string="Full Screen" calss="btn btn-success"></button>-->
                     </header>
-                        <group>
+
+                    <notebook>
+                        <page string="Image" class="sd_visualize_image_page text-center">
+<!--                            <group>-->
+<!--                            <div class="text-center" style="width:700px;">-->
+<!--                                <field name="image2" class="diagram_process_form_view_image border" style="direction: initial;" />-->
+<!--                            </div >-->
+
+<!--                            </group>-->
+                            <div>
+
+                        <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
+                                <div class="text-center">
+                                <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
+
+                                </div>
+                                </div>
+                        </page>
+                        <page string="settings">
+                                                    <group>
                             <group>
                                 <field name="update" invisible="1"/>
                                 <field name="name"/>
@@ -49,20 +69,6 @@
 <!--                                <field name="last_date" readonly="1"/>-->
                             </group>
                         </group>
-                    <notebook>
-                        <page string="Image" class="sd_visualize_image_page text-center">
-<!--                            <group>-->
-<!--                            <div class="text-center" style="width:700px;">-->
-<!--                                <field name="image2" class="diagram_process_form_view_image border" style="direction: initial;" />-->
-<!--                            </div >-->
-
-<!--                            </group>-->
-                        <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
-
-                                <div class="text-center">
-                                <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
-
-                                </div>
                         </page>
                         <page string="Values">
                             <group>
@@ -122,6 +128,42 @@
             </field>
         </record>
 
+                <record model="ir.ui.view" id="sd_visualize_diagram_form_full">
+            <field name="name">Diagram</field>
+            <field name="model">sd_visualize.diagram</field>
+            <field name="arch" type="xml">
+                <form js_class="visualize_diagram_process_form_view">
+                    <header>
+                    </header>
+                            <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
+                                <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
+                                <field name="update" invisible="1"/>
+                                <field name="name" invisible="1"/>
+                                <field name="project" invisible="1"/>
+
+                                    <field name="values"  invisible="1" domain="[('diagram', '=', id)]" context="{'diagram': id}" widget="one2many" nolabel="1">
+                                        <tree editable="bottom" delete="0" >
+                                            <field name="diagram" invisible="1" />
+                                            <field name="sequence" widget='handle'/>
+                                            <field name="display" widget="boolean_toggle"/>
+                                            <field name="calculate" widget="boolean_toggle"/>
+                                            <field name="display_name"/>
+                                            <field name="variable_name"/>
+                                            <field name="display_type"/>
+                                            <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
+                                            <field name="image" widget="image" readonly='0' options="{'size': [30, 30],}"
+                                                   attrs="{'invisible':[('display_type', '=', 'data')]}"/>
+                                            <field name="symbol"/>
+                                            <field name="equation"/>
+                                        </tree>
+                                    </field>
+
+                                    <field name="function_name" invisible="1"/>
+
+                </form>
+            </field>
+        </record>
+
 
         <!-- ==================================================  Search ====================-->
 
@@ -158,6 +200,15 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_visualize_diagram_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_new')})]"/>
             <field name="context">{'search_default_project_group': 1}</field>
+        </record>
+        <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_full">
+            <field name="name">Diagram Full</field>
+            <field name="res_model">sd_visualize.diagram</field>
+            <field name="view_mode">form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_full')})]"/>
+            <field name="context">{'search_default_project_group': 1}</field>
+            <field name="target">fullscreen</field>
         </record>
 
         <!-- ==================================================  Menu ====================-->
