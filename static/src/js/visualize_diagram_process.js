@@ -247,10 +247,11 @@
 
 
         onDateChange: function(e){
+            let self = this;
 //            console.log('onChaneyDate', e, this)
-            if (e == 'render') {
                 let dt = moment();
-                console.log(moment().format('YYYY MM DD'), moment().format('jYYYY jMM jDD'))
+            if (e == 'render') {
+//                console.log(moment().format('YYYY MM DD'), moment().format('jYYYY jMM jDD'))
                 let sl = this.el.querySelector('.select_date_update')
                 sl.childNodes[0].children[0].value = dt.format('jYYYY');
                 sl.childNodes[1].children[0].value = dt.format('jMM');
@@ -260,7 +261,9 @@
                 let year = e.currentTarget.childNodes[0].children[0]
                 let month = e.currentTarget.childNodes[1].children[0]
                 let day = e.currentTarget.childNodes[2].children[0]
-                console.log('select_date_update',year.value, month.value, day.value, )
+//                console.log('select_date_update',year.value, month.value, day.value, )
+                let date = moment(`${year.value}/${month.value}/${day.value}`, 'jYYYY/jMM/jDD').format('YYYY-MM-DD');
+                self.updateBoxes(date)
             }
         },
 
@@ -331,19 +334,25 @@
             self.updateBoxes()
             return res
         },
-        updateBoxes: function(){
+        updateBoxes: function(date){
             let self = this;
+            date = typeof date == 'string' ? date : moment().format("YYYY-MM-DD")
+            console.log('updateBoxes:', date, typeof date)
             setTimeout(function(){
-                self._getLocation().then(data => self._createBoxes(data));
-            }, 100)
+                        console.log('updateBoxes: setTimeout', date, typeof date)
+
+                self._getLocation(date).then(data => self._createBoxes(data));
+            }, 100, date)
         },
-        _getLocation: function(){
+        _getLocation: function(date){
             let self = this;
 //            console.log('_getLocation', self.state)
+            console.log('_getLocation:', date, typeof date)
+
             return self._rpc({
                                 model: 'sd_visualize.diagram',
                                 method: 'get_diagram_values',
-                                args: [[], self.state.res_id, self.state.data.function_name],
+                                args: [[], date, self.state.res_id, self.state.data.function_name],
                             })
                             .then(data => JSON.parse(data))
                             .then(data => data)
@@ -351,8 +360,11 @@
          },
         _createBoxes: function(data){
             let self = this;
-            let diagram = self.el.querySelector('.diagram_process_form_view_image');
-            let diagramImage = diagram.querySelector('img');
+            let diagram = self.el.querySelectorAll('.diagram_process_form_view_image');
+            console.log('diagram', diagram)
+            let diagramImage = diagram[0].querySelector('img');
+            diagram[0].innerHTML = '';
+            diagram[0].appendChild(diagramImage)
             diagramImage.classList.remove('img-fluid');
             let chartBox = '';
             let chartBoxList = Object();
@@ -421,7 +433,7 @@
                        fontSlider.addEventListener('mouseleave', e => moveMode = false)
                     }
 
-                    diagram.appendChild(containerDiv);
+                    diagram[0].appendChild(containerDiv);
                     containerDiv.id = `data_box_${value.loc_id}`;
                     let boxContent = document.createElement("div");
                     containerDiv.appendChild(boxContent);
@@ -450,6 +462,7 @@
                         plot_layout['height'] =  value.point_h
                         plot_layout['font'] =  {size: value.point_size, color: value.point_color,}
                     }
+                    console.log('typeof Plotly:', typeof Plotly, value.value_id)
 
                     typeof Plotly == 'undefined' ? '' :
                         Plotly.newPlot(`chart_${value.value_id}`, plot_value.data, plot_layout, plot_config)

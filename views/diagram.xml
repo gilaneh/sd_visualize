@@ -64,7 +64,7 @@
                                     <div class="row col-lg-6">
                                         <div class="row select_date_update">
                                             <div class=" ">
-                                            <select class="form-select-year" t-model="state.year" t-on-change="onDateChange">
+                                            <select class="custom-select form-select-year" t-model="state.year" t-on-change="onDateChange">
                                                 <option value="1395">1395</option>
                                                 <option value="1396">1396</option>
                                                 <option value="1397">1397</option>
@@ -81,7 +81,7 @@
 
                                         </div>
                                             <div class="">
-                                            <select class="form-select-month" t-model="state.month" t-on-change="onDateChange">
+                                            <select class="custom-select form-select-month" t-model="state.month" t-on-change="onDateChange">
 <!--                                                <option value="1">فروردین</option>-->
 <!--                                                <option value="2">اردیبهشت</option>-->
 <!--                                                <option value="3">خرداد</option>-->
@@ -109,7 +109,7 @@
                                             </select>
                                             </div>
                                             <div class="">
-                                            <select class="form-select-day"  t-model="state.day" t-on-change="onDateChange">
+                                            <select class="custom-select form-select-day"  t-model="state.day" t-on-change="onDateChange">
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>

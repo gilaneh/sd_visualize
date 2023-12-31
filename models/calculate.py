@@ -8,7 +8,7 @@ from datetime import datetime, date, timedelta
 class SdVisualizeCalculate(models.Model):
     _name = 'sd_visualize.calculate'
 
-    def calculate(self, function_name, diagram_id):
+    def calculate(self, function_name, diagram_id, update_date):
         # print(f'------>\n  Calculate: {self.env.context} diagram_id: {diagram_id}\n ')
 
         return {}
