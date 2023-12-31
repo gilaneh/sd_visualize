@@ -25,7 +25,7 @@ class SdVisualizeDiagram(models.Model):
     function_name = fields.Char()
     # cal_function = fields.Many2one('sd_vcalculate.data', )
     image2 = fields.Binary( )
-
+    select_duration = fields.Char()
     def print_pdf(self):
         pass
 

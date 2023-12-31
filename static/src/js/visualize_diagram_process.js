@@ -8,7 +8,8 @@
     import viewRegistry from 'web.view_registry';
     import session from 'web.session';
     import { loadJS } from "web.ajax";
-    const { onMounted, onWillUnmount, onWillStart, useExternalListener, useRef, useSubEnv } = owl.hooks;
+    const { onMounted, onWillUnmount, onWillStart, useExternalListener, useRef, useState, useSubEnv } = owl.hooks;
+    import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker"
 
     let pointer = Object();
     let editMode = false
@@ -26,6 +27,7 @@
             let self = this;
 //              console.log('Controller start')
 //            onresize = (e) => { self._print_pdf_button()}
+
             return this._super.apply(this, arguments).then(function(){
                 $(document).keyup(function(ev){
                     if(ev.key === 'Escape'){ self._clearDraggableDiv(ev);}
@@ -200,6 +202,9 @@
     var VisualizeDiagramProcessRenderer = FormRenderer.extend({
         events: {
             'click .btn_print_pdf ': '_print_pdf',
+            'click .visualize_datepicker ': '_visualize_datepicker',
+            'change  .form-select-month, .form-select-year, .form-select-day ': 'onDateChange',
+            'click .select_date_update ': 'onDateChange',
         },
         /**
          * @override
@@ -208,48 +213,62 @@
             let self = this;
             var res = this._super.apply(this, arguments);
             console.log('Render start',)
-            onMounted(()=>{
+            onMounted(async ()=>{
+                self.onDateChange('render')
                 window.addEventListener("resize", self._print_pdf_button);
 //                this.updateSize();
                   self._print_pdf_button()
-                  console.log('Render start onMounted')
+                try {
+                    Plotly
+                } catch (e) {
+                    const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+                    await loadJS(url);
+                    }
+                try {
+                    html2canvas
+                } catch (e) {
+                    const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
+                    await loadJS(url);
+                    }
+
             });
             onWillUnmount(()=>{
             window.removeEventListener("resize", self._print_pdf_button)
                   console.log('Render start onWillUnmount')
             });
-
             this._interact();
             return res
         },
         _render(){
             var res = this._super.apply(this, arguments);
             console.log('Render _render')
-
-            try {
-                Plotly
-            } catch (e) {
-                const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
-                var localeReady = loadJS(url);
-                Promise.all([localeReady])
-                    .catch(e => console.log('loading plotly:', e));
-                }
-            try {
-                html2canvas
-            } catch (e) {
-                const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
-                var localeReady = loadJS(url);
-                Promise.all([localeReady])
-                    .catch(e => console.log('loading html2canvas:', e));
-                }
-
-
             return res
-
         },
-//        _print_pdf: function(e){
-//            console.log('_render _print_pdf')
-//        },
+
+
+        onDateChange: function(e){
+//            console.log('onChaneyDate', e, this)
+            if (e == 'render') {
+                let dt = moment();
+                console.log(moment().format('YYYY MM DD'), moment().format('jYYYY jMM jDD'))
+                let sl = this.el.querySelector('.select_date_update')
+                sl.childNodes[0].children[0].value = dt.format('jYYYY');
+                sl.childNodes[1].children[0].value = dt.format('jMM');
+                sl.childNodes[2].children[0].value = dt.format('jDD');
+            }
+            else if (e.target.classList.contains("btn_date_update")) {
+                let year = e.currentTarget.childNodes[0].children[0]
+                let month = e.currentTarget.childNodes[1].children[0]
+                let day = e.currentTarget.childNodes[2].children[0]
+                console.log('select_date_update',year.value, month.value, day.value, )
+            }
+        },
+
+
+
+        _visualize_datepicker: function(){
+            console.log('visualize_datepicker')
+        },
         _print_pdf_button: function(){
             let btn_print_pdf = document.querySelector('.btn_print_pdf')
 //            console.log('_print_pdf_button',btn_print_pdf,  window)

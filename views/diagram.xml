@@ -2,14 +2,27 @@
     <data>
         <!-- ==================================================  sd_visualize.diagram ====================-->
 
+<!--        <record model="ir.ui.view" id="sd_visualize_diagram_list1">-->
+<!--            <field name="name">Diagram</field>-->
+<!--            <field name="model">sd_visualize.diagram</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <visualize_show_diagram>-->
+<!--                    <field name="name"/>-->
+<!--                    <field name="project" />-->
+<!--                    <field name="image" widget="image" class="w-25" />-->
+<!--                </visualize_show_diagram>-->
+<!--            </field>-->
+<!--        </record>        -->
+        <!-- ==================================================  sd_visualize.diagram ====================-->
+
         <record model="ir.ui.view" id="sd_visualize_diagram_list">
             <field name="name">Diagram</field>
             <field name="model">sd_visualize.diagram</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
-<!--                    <field name="project" />-->
-                    <field name="image" widget="image" class="w-25"/>
+                    <field name="project" />
+                    <field name="image" widget="image" class="w-25" />
                 </tree>
             </field>
         </record>
@@ -48,8 +61,96 @@
 
 <!--                            </group>-->
                             <div>
+                                    <div class="row col-lg-6">
+                                        <div class="row select_date_update">
+                                            <div class=" ">
+                                            <select class="form-select-year" t-model="state.year" t-on-change="onDateChange">
+                                                <option value="1395">1395</option>
+                                                <option value="1396">1396</option>
+                                                <option value="1397">1397</option>
+                                                <option value="1398">1398</option>
+                                                <option value="1399">1399</option>
+                                                <option value="1400">1400</option>
+                                                <option value="1401">1401</option>
+                                                <option value="1402">1402</option>
+                                                <option value="1403">1403</option>
+                                                <option value="1404">1404</option>
+                                                <option value="1405">1405</option>
+                                                <option value="1406">1406</option>
+                                            </select>
 
-                        <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
+                                        </div>
+                                            <div class="">
+                                            <select class="form-select-month" t-model="state.month" t-on-change="onDateChange">
+<!--                                                <option value="1">فروردین</option>-->
+<!--                                                <option value="2">اردیبهشت</option>-->
+<!--                                                <option value="3">خرداد</option>-->
+<!--                                                <option value="4">تیر</option>-->
+<!--                                                <option value="5">مرداد</option>-->
+<!--                                                <option value="6">شهریور</option>-->
+<!--                                                <option value="7">مهر</option>-->
+<!--                                                <option value="8">آبان</option>-->
+<!--                                                <option value="9">آذر</option>-->
+<!--                                                <option value="10">دی</option>-->
+<!--                                                <option value="11">بهمن</option>-->
+<!--                                                <option value="12">اسفند</option>-->
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            </div>
+                                            <div class="">
+                                            <select class="form-select-day"  t-model="state.day" t-on-change="onDateChange">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                                <option value="19">19</option>
+                                                <option value="20">20</option>
+                                                <option value="21">21</option>
+                                                <option value="22">22</option>
+                                                <option value="23">23</option>
+                                                <option value="24">24</option>
+                                                <option value="25">25</option>
+                                                <option value="26">26</option>
+                                                <option value="27">27</option>
+                                                <option value="28">28</option>
+                                                <option value="29">29</option>
+                                                <option value="30">30</option>
+                                                <option value="31">31</option>
+
+
+                                            </select>
+                                        </div>
+                                            <div class="btn_date_update btn btn-primary mx-2">Update</div>
+                                        </div>
+
+                        <div name="print_pdf"  class="btn btn-success mx-2  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
+                                    </div>
+
                                 <div class="text-center">
                                 <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
 
@@ -200,17 +301,24 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_visualize_diagram_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_new')})]"/>
             <field name="context">{'search_default_project_group': 1}</field>
+<!--                        <field name="target">fullscreen</field>-->
+
         </record>
         <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_full">
             <field name="name">Diagram Full</field>
             <field name="res_model">sd_visualize.diagram</field>
-            <field name="view_mode">form</field>
-            <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_full')})]"/>
+<!--            <field name="view_mode">tree,visualize_show_diagram</field>-->
+<!--            <field name="view_ids" eval="[(5, 0, 0),-->
+<!--                (0, 0, {'view_mode': 'visualize_show_diagram', 'view_id': ref('sd_visualize.sd_visualize_diagram_list1')})]"/>-->
             <field name="context">{'search_default_project_group': 1}</field>
             <field name="target">fullscreen</field>
         </record>
 
+        <record model="ir.actions.client" id="action_window_show_diagram">
+            <field name="name">sd_visualize.diagram</field>
+            <field name="tag">visualize_show_diagram</field>
+
+        </record>
         <!-- ==================================================  Menu ====================-->
 
 
@@ -222,7 +330,12 @@
 <!--        <menuitem name="Diagram New"-->
 <!--                  id="sd_visualize.diagram_new_menu"-->
 <!--                  parent="sd_visualize.sd_visualize_root_menu"-->
-<!--                  action="sd_visualize.action_window_diagram_new"/>-->
+<!--                  action="sd_visualize.action_window_show_diagram"/>-->
+
+<!--        <menuitem name="Diagram New 1"-->
+<!--                  id="sd_visualize.diagram_new1_menu"-->
+<!--                  parent="sd_visualize.sd_visualize_root_menu"-->
+<!--                  action="sd_visualize.action_window_diagram_full"/>-->
 
 
     </data>

@@ -17,7 +17,7 @@
     # for the full list
     'category': 'Service Desk/Service Desk',
     'application': True,
-    'version': '1.1.1',
+    'version': '1.1.2',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'web', 'mail','project', ],
@@ -52,6 +52,7 @@
             'sd_visualize/static/src/lib/interactjs/interact.min.js',
             'sd_visualize/static/src/js/visualize_diagram_process.js',
             'sd_visualize/static/src/components/**/*.js',
+            'sd_visualize/static/src/components/**/*.scss',
 
         ],
         'web.report_assets_common': [
