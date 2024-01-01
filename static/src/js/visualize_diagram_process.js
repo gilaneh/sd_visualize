@@ -363,8 +363,10 @@
             let diagram = self.el.querySelectorAll('.diagram_process_form_view_image');
             console.log('diagram', diagram)
             let diagramImage = diagram[0].querySelector('img');
-            diagram[0].innerHTML = '';
-            diagram[0].appendChild(diagramImage)
+             if (!editMode) {
+                diagram[0].innerHTML = '';
+                diagram[0].appendChild(diagramImage)
+            }
             diagramImage.classList.remove('img-fluid');
             let chartBox = '';
             let chartBoxList = Object();

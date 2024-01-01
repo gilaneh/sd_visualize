@@ -36,7 +36,7 @@ class SdVisualizeCalculate(models.Model):
 
     def month_start_end(self, this_date, month=0, calendar='fa_IR'):
         format = "%Y/%m/%d"
-        this_date = datetime.now()
+        # this_date = datetime.now()
         if calendar == 'fa_IR':
             month_delta = month if month < 0 or month > -60 else 0
             first_day_j = jdatetime.date.fromgregorian(date=this_date).replace(day=1)
