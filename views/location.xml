@@ -6,7 +6,7 @@
             <field name="name">Location</field>
             <field name="model">sd_visualize.location</field>
             <field name="arch" type="xml">
-                <tree editable="top">
+                <tree editable="top" multi_edit="1">
 <!--                    <field name="id" />-->
                     <field name="diagram" />
                     <field name="value_id" />
