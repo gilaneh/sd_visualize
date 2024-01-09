@@ -22,7 +22,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="project"/>
-                    <field name="image" widget="image" style="max-width:70px;"/>
+                    <field name="image" widget="image" />
                 </tree>
             </field>
         </record>
