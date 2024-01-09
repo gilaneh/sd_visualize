@@ -31,6 +31,10 @@
             <field name="model">sd_visualize.location</field>
             <field name="arch" type="xml">
                 <search string="">
+                    <field name="diagram" />
+                    <group>
+                        <filter name="diagram" string="Diagram" context="{'group_by': 'diagram'}"></filter>
+                    </group>
 
                 </search>
             </field>
@@ -43,6 +47,7 @@
             <field name="name">Location</field>
             <field name="res_model">sd_visualize.location</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_diagram': 1}</field>
         </record>
 
         <!-- ==================================================  Menu ====================-->

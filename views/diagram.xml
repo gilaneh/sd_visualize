@@ -2,17 +2,17 @@
     <data>
         <!-- ==================================================  sd_visualize.diagram ====================-->
 
-<!--        <record model="ir.ui.view" id="sd_visualize_diagram_list1">-->
-<!--            <field name="name">Diagram</field>-->
-<!--            <field name="model">sd_visualize.diagram</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <visualize_show_diagram>-->
-<!--                    <field name="name"/>-->
-<!--                    <field name="project" />-->
-<!--                    <field name="image" widget="image" class="w-25" />-->
-<!--                </visualize_show_diagram>-->
-<!--            </field>-->
-<!--        </record>        -->
+        <!--        <record model="ir.ui.view" id="sd_visualize_diagram_list1">-->
+        <!--            <field name="name">Diagram</field>-->
+        <!--            <field name="model">sd_visualize.diagram</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <visualize_show_diagram>-->
+        <!--                    <field name="name"/>-->
+        <!--                    <field name="project" />-->
+        <!--                    <field name="image" widget="image" class="w-25" />-->
+        <!--                </visualize_show_diagram>-->
+        <!--            </field>-->
+        <!--        </record>        -->
         <!-- ==================================================  sd_visualize.diagram ====================-->
 
         <record model="ir.ui.view" id="sd_visualize_diagram_list">
@@ -21,8 +21,8 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
-                    <field name="project" />
-                    <field name="image" widget="image" class="w-25" />
+                    <field name="project"/>
+                    <field name="image" widget="image" style="max-width:70px;"/>
                 </tree>
             </field>
         </record>
@@ -32,13 +32,13 @@
             <field name="model">sd_visualize.diagram</field>
             <field name="arch" type="xml">
                 <form js_class="visualize_process">
+                    <group>
                         <group>
-                            <group>
-                                <field name="update" invisible="1"/>
-                                <field name="name"/>
-                                <field name="project"/>
-                            </group>
+                            <field name="update" invisible="1"/>
+                            <field name="name"/>
+                            <field name="project"/>
                         </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -49,22 +49,23 @@
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
-<!--                            <button name="%(action_window_diagram_full)d" type="action" string="Full Screen" calss="btn btn-success"></button>-->
+                        <!--                            <button name="%(action_window_diagram_full)d" type="action" string="Full Screen" calss="btn btn-success"></button>-->
                     </header>
 
                     <notebook>
                         <page string="Image" class="sd_visualize_image_page text-center">
-<!--                            <group>-->
-<!--                            <div class="text-center" style="width:700px;">-->
-<!--                                <field name="image2" class="diagram_process_form_view_image border" style="direction: initial;" />-->
-<!--                            </div >-->
+                            <!--                            <group>-->
+                            <!--                            <div class="text-center" style="width:700px;">-->
+                            <!--                                <field name="image2" class="diagram_process_form_view_image border" style="direction: initial;" />-->
+                            <!--                            </div >-->
 
-<!--                            </group>-->
+                            <!--                            </group>-->
                             <div>
-                                    <div class="row col-lg-6">
-                                        <div class="row select_date_update">
-                                            <div class=" ">
-                                            <select class="custom-select form-select-year" t-model="state.year" t-on-change="onDateChange">
+                                <div class="row col-lg-6">
+                                    <div class="row select_date_update mx-2 border rounded border-info">
+                                        <div class=" ">
+                                            <select class="custom-select form-select-year" t-model="state.year"
+                                                    t-on-change="onDateChange">
                                                 <option value="1395">1395</option>
                                                 <option value="1396">1396</option>
                                                 <option value="1397">1397</option>
@@ -80,20 +81,21 @@
                                             </select>
 
                                         </div>
-                                            <div class="">
-                                            <select class="custom-select form-select-month" t-model="state.month" t-on-change="onDateChange">
-<!--                                                <option value="1">فروردین</option>-->
-<!--                                                <option value="2">اردیبهشت</option>-->
-<!--                                                <option value="3">خرداد</option>-->
-<!--                                                <option value="4">تیر</option>-->
-<!--                                                <option value="5">مرداد</option>-->
-<!--                                                <option value="6">شهریور</option>-->
-<!--                                                <option value="7">مهر</option>-->
-<!--                                                <option value="8">آبان</option>-->
-<!--                                                <option value="9">آذر</option>-->
-<!--                                                <option value="10">دی</option>-->
-<!--                                                <option value="11">بهمن</option>-->
-<!--                                                <option value="12">اسفند</option>-->
+                                        <div class="">
+                                            <select class="custom-select form-select-month" t-model="state.month"
+                                                    t-on-change="onDateChange">
+                                                <!--                                                <option value="1">فروردین</option>-->
+                                                <!--                                                <option value="2">اردیبهشت</option>-->
+                                                <!--                                                <option value="3">خرداد</option>-->
+                                                <!--                                                <option value="4">تیر</option>-->
+                                                <!--                                                <option value="5">مرداد</option>-->
+                                                <!--                                                <option value="6">شهریور</option>-->
+                                                <!--                                                <option value="7">مهر</option>-->
+                                                <!--                                                <option value="8">آبان</option>-->
+                                                <!--                                                <option value="9">آذر</option>-->
+                                                <!--                                                <option value="10">دی</option>-->
+                                                <!--                                                <option value="11">بهمن</option>-->
+                                                <!--                                                <option value="12">اسفند</option>-->
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -107,9 +109,10 @@
                                                 <option value="11">11</option>
                                                 <option value="12">12</option>
                                             </select>
-                                            </div>
-                                            <div class="">
-                                            <select class="custom-select form-select-day"  t-model="state.day" t-on-change="onDateChange">
+                                        </div>
+                                        <div class="">
+                                            <select class="custom-select form-select-day" t-model="state.day"
+                                                    t-on-change="onDateChange">
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -145,50 +148,61 @@
 
                                             </select>
                                         </div>
-                                            <div class="btn_date_update btn btn-primary mx-2">Update</div>
-                                        </div>
-
-                        <div name="print_pdf"  class="btn btn-success mx-2  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
+                                        <div class="btn_date_update btn btn-primary ">Update</div>
                                     </div>
 
+                                    <div name="print_pdf" class="btn btn-success mx-2  btn_print_pdf"
+                                         data-toggle="tooltip" data-placement="top" title="">
+                                        <i class="fa fa-camera"></i>
+                                    </div>
+
+                                    <div name="" class="btn_full_screen_report btn btn-info mx-2  "
+                                         data-toggle="tooltip" data-placement="top" title="">
+                                        <i class="fa fa-expand"></i>
+                                    </div>
+                                </div>
+
                                 <div class="text-center">
-                                <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
+                                    <field name="image" class="diagram_process_form_view_image border"
+                                           style="direction: initial;" widget="image"/>
 
                                 </div>
-                                </div>
+                            </div>
                         </page>
                         <page string="settings">
-                                                    <group>
                             <group>
-                                <field name="update" invisible="1"/>
-                                <field name="name"/>
-                                <field name="project"/>
+                                <group>
+                                    <field name="update" invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="project"/>
+                                </group>
+                                <group>
+                                    <button name="%(sd_visualize.diagram_date_wizard_action)d" string="Select Date"
+                                            type="action" class="btn btn-primary"></button>
+                                    <!--                                <field name="first_date" readonly="1" />-->
+                                    <!--                                <field name="last_date" readonly="1"/>-->
+                                </group>
                             </group>
-                            <group>
-                        <button name="%(sd_visualize.diagram_date_wizard_action)d" string="Select Date" type="action" class="btn btn-primary"></button>
-<!--                                <field name="first_date" readonly="1" />-->
-<!--                                <field name="last_date" readonly="1"/>-->
-                            </group>
-                        </group>
                         </page>
                         <page string="Values">
                             <group>
-                                    <field name="values" domain="[('diagram', '=', id)]" context="{'diagram': id}" widget="one2many" nolabel="1">
-                                        <tree editable="bottom" delete="0" >
-                                            <field name="diagram" invisible="1" />
-                                            <field name="sequence" widget='handle'/>
-                                            <field name="display" widget="boolean_toggle"/>
-                                            <field name="calculate" widget="boolean_toggle"/>
-                                            <field name="display_name"/>
-                                            <field name="variable_name"/>
-                                            <field name="display_type"/>
-                                            <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
-                                            <field name="image" widget="image" readonly='0' options="{'size': [30, 30],}"
-                                                   attrs="{'invisible':[('display_type', '=', 'data')]}"/>
-                                            <field name="symbol"/>
-                                            <field name="equation"/>
-                                        </tree>
-                                    </field>
+                                <field name="values" domain="[('diagram', '=', id)]" context="{'diagram': id}"
+                                       widget="one2many" nolabel="1">
+                                    <tree editable="bottom" delete="0">
+                                        <field name="diagram" invisible="1"/>
+                                        <field name="sequence" widget='handle'/>
+                                        <field name="display" widget="boolean_toggle"/>
+                                        <field name="calculate" widget="boolean_toggle"/>
+                                        <field name="display_name"/>
+                                        <field name="variable_name"/>
+                                        <field name="display_type"/>
+                                        <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
+                                        <field name="image" widget="image" readonly='0' options="{'size': [30, 30],}"
+                                               attrs="{'invisible':[('display_type', '=', 'data')]}"/>
+                                        <field name="symbol"/>
+                                        <field name="equation"/>
+                                    </tree>
+                                </field>
                                 <group>
 
                                 </group>
@@ -197,10 +211,10 @@
                         <page string="Calculator">
                             <group>
                                 <group>
-<!--                                    <field name="calculator" domain="[('name', 'like', 'sd_vcal' )]"-->
-<!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
-<!--                                    <field name="cal_function"-->
-<!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
+                                    <!--                                    <field name="calculator" domain="[('name', 'like', 'sd_vcal' )]"-->
+                                    <!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
+                                    <!--                                    <field name="cal_function"-->
+                                    <!--                                           options="{'no_create': True,'no_edit': True,'no_open': True,}"/>-->
                                     <field name="function_name"/>
                                 </group>
                                 <group>
@@ -218,9 +232,9 @@
 
                                 </group>
                                 <group>
-<!--                                    <svg width='100px' height='600px' viewBox='0 -1.5 5 3' preserveAspectRatio='xMidYMid meet' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink'>-->
-<!-- <path fill='none' stroke='blue' stroke-width='0.1' d='M0 0 l1 1 1,-2 1,2 1,-2 1,2'/>-->
-<!--</svg>-->
+                                    <!--                                    <svg width='100px' height='600px' viewBox='0 -1.5 5 3' preserveAspectRatio='xMidYMid meet' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink'>-->
+                                    <!-- <path fill='none' stroke='blue' stroke-width='0.1' d='M0 0 l1 1 1,-2 1,2 1,-2 1,2'/>-->
+                                    <!--</svg>-->
                                 </group>
                             </group>
                         </page>
@@ -229,37 +243,42 @@
             </field>
         </record>
 
-                <record model="ir.ui.view" id="sd_visualize_diagram_form_full">
+        <record model="ir.ui.view" id="sd_visualize_diagram_form_full">
             <field name="name">Diagram</field>
             <field name="model">sd_visualize.diagram</field>
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
                     </header>
-                            <div name="print_pdf"  class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip" data-placement="top"  title=""><i class="fa fa-camera"></i></div>
-                                <field name="image" class="diagram_process_form_view_image border" style="direction: initial;" widget="image"/>
-                                <field name="update" invisible="1"/>
-                                <field name="name" invisible="1"/>
-                                <field name="project" invisible="1"/>
+                    <div name="print_pdf" class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip"
+                         data-placement="top" title="">
+                        <i class="fa fa-camera"></i>
+                    </div>
+                    <field name="image" class="diagram_process_form_view_image border" style="direction: initial;"
+                           widget="image"/>
+                    <field name="update" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="project" invisible="1"/>
 
-                                    <field name="values"  invisible="1" domain="[('diagram', '=', id)]" context="{'diagram': id}" widget="one2many" nolabel="1">
-                                        <tree editable="bottom" delete="0" >
-                                            <field name="diagram" invisible="1" />
-                                            <field name="sequence" widget='handle'/>
-                                            <field name="display" widget="boolean_toggle"/>
-                                            <field name="calculate" widget="boolean_toggle"/>
-                                            <field name="display_name"/>
-                                            <field name="variable_name"/>
-                                            <field name="display_type"/>
-                                            <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
-                                            <field name="image" widget="image" readonly='0' options="{'size': [30, 30],}"
-                                                   attrs="{'invisible':[('display_type', '=', 'data')]}"/>
-                                            <field name="symbol"/>
-                                            <field name="equation"/>
-                                        </tree>
-                                    </field>
+                    <field name="values" invisible="1" domain="[('diagram', '=', id)]" context="{'diagram': id}"
+                           widget="one2many" nolabel="1">
+                        <tree editable="bottom" delete="0">
+                            <field name="diagram" invisible="1"/>
+                            <field name="sequence" widget='handle'/>
+                            <field name="display" widget="boolean_toggle"/>
+                            <field name="calculate" widget="boolean_toggle"/>
+                            <field name="display_name"/>
+                            <field name="variable_name"/>
+                            <field name="display_type"/>
+                            <field name="value" attrs="{'invisible':[('display_type', '=', 'image')]}"/>
+                            <field name="image" widget="image" readonly='0' options="{'size': [30, 30],}"
+                                   attrs="{'invisible':[('display_type', '=', 'data')]}"/>
+                            <field name="symbol"/>
+                            <field name="equation"/>
+                        </tree>
+                    </field>
 
-                                    <field name="function_name" invisible="1"/>
+                    <field name="function_name" invisible="1"/>
 
                 </form>
             </field>
@@ -273,10 +292,10 @@
             <field name="model">sd_visualize.diagram</field>
             <field name="arch" type="xml">
                 <search string="">
-                                <field name="name"/>
-<!--                                <field name="project" />-->
+                    <field name="name"/>
+                    <!--                                <field name="project" />-->
                     <group expand="0" string="Group By" colspan="4" col="4">
-<!--                        <filter string="Project" name="project_group" domain="[]" context="{'group_by': 'project'}"/>-->
+                        <!--                        <filter string="Project" name="project_group" domain="[]" context="{'group_by': 'project'}"/>-->
 
                     </group>
                 </search>
@@ -301,15 +320,15 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_visualize_diagram_list')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_new')})]"/>
             <field name="context">{'search_default_project_group': 1}</field>
-<!--                        <field name="target">fullscreen</field>-->
+            <!--                        <field name="target">fullscreen</field>-->
 
         </record>
         <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_full">
             <field name="name">Diagram Full</field>
             <field name="res_model">sd_visualize.diagram</field>
-<!--            <field name="view_mode">tree,visualize_show_diagram</field>-->
-<!--            <field name="view_ids" eval="[(5, 0, 0),-->
-<!--                (0, 0, {'view_mode': 'visualize_show_diagram', 'view_id': ref('sd_visualize.sd_visualize_diagram_list1')})]"/>-->
+            <!--            <field name="view_mode">tree,visualize_show_diagram</field>-->
+            <!--            <field name="view_ids" eval="[(5, 0, 0),-->
+            <!--                (0, 0, {'view_mode': 'visualize_show_diagram', 'view_id': ref('sd_visualize.sd_visualize_diagram_list1')})]"/>-->
             <field name="context">{'search_default_project_group': 1}</field>
             <field name="target">fullscreen</field>
         </record>
@@ -327,15 +346,15 @@
                   parent="sd_visualize.sd_visualize_root_menu"
                   action="sd_visualize.action_window_diagram"/>
 
-<!--        <menuitem name="Diagram New"-->
-<!--                  id="sd_visualize.diagram_new_menu"-->
-<!--                  parent="sd_visualize.sd_visualize_root_menu"-->
-<!--                  action="sd_visualize.action_window_show_diagram"/>-->
+        <!--        <menuitem name="Diagram New"-->
+        <!--                  id="sd_visualize.diagram_new_menu"-->
+        <!--                  parent="sd_visualize.sd_visualize_root_menu"-->
+        <!--                  action="sd_visualize.action_window_show_diagram"/>-->
 
-<!--        <menuitem name="Diagram New 1"-->
-<!--                  id="sd_visualize.diagram_new1_menu"-->
-<!--                  parent="sd_visualize.sd_visualize_root_menu"-->
-<!--                  action="sd_visualize.action_window_diagram_full"/>-->
+        <!--        <menuitem name="Diagram New 1"-->
+        <!--                  id="sd_visualize.diagram_new1_menu"-->
+        <!--                  parent="sd_visualize.sd_visualize_root_menu"-->
+        <!--                  action="sd_visualize.action_window_diagram_full"/>-->
 
 
     </data>

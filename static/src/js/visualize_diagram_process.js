@@ -33,45 +33,45 @@
                     if(ev.key === 'Escape'){ self._clearDraggableDiv(ev);}
                 });
 
-                self._print_pdf_button()
+//                self._print_pdf_button()
 
             });
         },
-        _print_pdf_button: function(){
-//            console.log('_print_pdf_button', this)
-            let btn_print_pdf = this.el.querySelector('.btn_print_pdf')
-            if (!btn_print_pdf){return}
-            btn_print_pdf.classList.remove('btn-success', 'btn-dark')
-            if (window.devicePixelRatio < 1.3){
-                btn_print_pdf.classList.add('btn-dark')
-                btn_print_pdf.title = 'Zoom out the browser'
-                return false
-            }
-            btn_print_pdf.classList.add('btn-success')
-            btn_print_pdf.title = 'Take a snapshot'
-
-            return true
-        },
-        _print_pdf: function(e){
-            if (!this._print_pdf_button()){return}
-
-            html2canvas(document.querySelector(".diagram_process_form_view_image")).then(canvas => {
-
-                let img = canvas.toDataURL("image/png", 1);
-                let img_el = document.createElement('img')
-                img_el.src = img;
-                let a_el = document.createElement('a')
-                a_el.href = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-                // todo: download name must be generated based on report name and its date
-                a_el.download = 'report.png'
-                a_el.appendChild(img_el)
-                document.body.appendChild(a_el)
-                a_el.click()
-                a_el.remove()
-
-
-            });
-        },
+//        _print_pdf_button: function(){
+////            console.log('_print_pdf_button', this)
+//            let btn_print_pdf = this.el.querySelector('.btn_print_pdf')
+//            if (!btn_print_pdf){return}
+//            btn_print_pdf.classList.remove('btn-success', 'btn-dark')
+//            if (window.devicePixelRatio < 1.3){
+//                btn_print_pdf.classList.add('btn-dark')
+//                btn_print_pdf.title = 'Zoom out the browser'
+//                return false
+//            }
+//            btn_print_pdf.classList.add('btn-success')
+//            btn_print_pdf.title = 'Take a snapshot'
+//
+//            return true
+//        },
+//        _print_pdf: function(e){
+//            if (!this._print_pdf_button()){return}
+//
+//            html2canvas(document.querySelector(".diagram_process_form_view_image")).then(canvas => {
+//
+//                let img = canvas.toDataURL("image/png", 1);
+//                let img_el = document.createElement('img')
+//                img_el.src = img;
+//                let a_el = document.createElement('a')
+//                a_el.href = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+//                // todo: download name must be generated based on report name and its date
+//                a_el.download = 'report.png'
+//                a_el.appendChild(img_el)
+//                document.body.appendChild(a_el)
+//                a_el.click()
+//                a_el.remove()
+//
+//
+//            });
+//        },
         _onClickImagePage: function(e){
             let self = this;
             setTimeout(function(){
@@ -205,6 +205,7 @@
             'click .visualize_datepicker ': '_visualize_datepicker',
             'change  .form-select-month, .form-select-year, .form-select-day ': 'onDateChange',
             'click .select_date_update ': 'onDateChange',
+            'click .btn_full_screen_report ': 'onFullScreen',
         },
         /**
          * @override
@@ -212,10 +213,13 @@
         start: function(){
             let self = this;
             var res = this._super.apply(this, arguments);
+            this.state = self.state
             console.log('Render start',)
             onMounted(async ()=>{
                 self.onDateChange('render')
                 window.addEventListener("resize", self._print_pdf_button);
+//                window.addEventListener("resize", self.updateBoxes.bind('d', self));
+                $(window).on('resize', { date: '', picker: this }, this.onResizeUpdate);
 //                this.updateSize();
                   self._print_pdf_button()
                 try {
@@ -233,9 +237,13 @@
 
             });
             onWillUnmount(()=>{
-            window.removeEventListener("resize", self._print_pdf_button)
-                  console.log('Render start onWillUnmount')
+                window.removeEventListener("resize", self._print_pdf_button)
+                window.removeEventListener("resize", self.updateBoxes)
+                      console.log('Render start onWillUnmount')
             });
+            onWillStart(async ()=>{
+                console.log('Render start onWillStart')
+            })
             this._interact();
             return res
         },
@@ -244,7 +252,33 @@
             console.log('Render _render')
             return res
         },
+        onFullScreen: async function(e,){
+            let self = this
+            console.log(e, self)
+            let diagram = self.el.querySelectorAll('.diagram_process_form_view_image')
+            let full_screen = document.createElement('div')
+            document.body.appendChild(full_screen)
+            full_screen.classList.add('bg-dark-light')
+            full_screen.style.width = '100%'
+            full_screen.style.height = '100%'
+            full_screen.style.display = 'block'
+            full_screen.style.position = 'absolute'
+            full_screen.style.top = '0'
+            full_screen.innerHTML = `
+            <div class="btn_exit m-3 bg-white text-center rounded" style=" width:50px; cursor: pointer; font-size: 2rem;" >X</div>
+            <div class="report_image"></div>
 
+            `
+            console.log('full_screen',full_screen.childNodes)
+            full_screen.childNodes[1].addEventListener('click', ()=> full_screen.remove())
+//            self.updateBoxes().then((data)=>console.log('self.updateBoxes',data))
+//            await  self._getLocation().then(function(data) {self._createBoxes(data, full_screen.childNodes[3])});
+//            html2canvas(document.querySelector(".diagram_process_form_view_image"),{logging: false}).then(canvas => {
+//                let img_el = document.createElement('img')
+//                img_el.src = img;
+//                document.body.full_screen.appendChild(a_el)
+//            });
+        },
 
         onDateChange: function(e){
             let self = this;
@@ -266,9 +300,6 @@
                 self.updateBoxes(date)
             }
         },
-
-
-
         _visualize_datepicker: function(){
             console.log('visualize_datepicker')
         },
@@ -277,7 +308,7 @@
 //            console.log('_print_pdf_button',btn_print_pdf,  window)
             if (!btn_print_pdf){return}
             btn_print_pdf.classList.remove('btn-success', 'btn-dark')
-            if (window.devicePixelRatio < 1.3){
+            if (window.devicePixelRatio < .1){
                 btn_print_pdf.classList.add('btn-dark')
                 btn_print_pdf.title = 'Zoom out the browser'
                 return false
@@ -288,11 +319,17 @@
             return true
         },
         _print_pdf: function(e){
+//            console.log('render print pdf')
             if (!this._print_pdf_button()){return}
+//            let coverDiv = document.querySelector('.temp_cover_div')
+//            coverDiv.style.zIndex = -1
+//            let diagram = document.querySelector(".diagram_process_form_view_image")
+//            console.log(diagram)
 
             html2canvas(document.querySelector(".diagram_process_form_view_image"),{logging: false}).then(canvas => {
 
                 let img = canvas.toDataURL("image/png", 1);
+//                console.log("canvas", canvas, img)
                 let img_el = document.createElement('img')
                 img_el.src = img;
                 let a_el = document.createElement('a')
@@ -303,9 +340,9 @@
                 document.body.appendChild(a_el)
                 a_el.click()
                 a_el.remove()
-
-
             });
+//                        coverDiv.classList.remove('d-none')
+
         },
         _sleep:function(ms){
             new Promise(r => setTimeout(r, ms));
@@ -322,6 +359,7 @@
             var y = target.getAttribute('data-y') ? (parseFloat(target.getAttribute('data-y'))) + event.dy : pointer[box_id]['point_y'] || 0;
             // translate the element
             target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+//            target.style.transform = `matrix(1, 0, 0, 1, ${x}, ${y}`;
             pointer[box_id]['point_x'] = Math.round(x);
             pointer[box_id]['point_y'] = Math.round(y);
             // update the position attributes
@@ -334,15 +372,19 @@
             self.updateBoxes()
             return res
         },
-        updateBoxes: function(date){
+        onResizeUpdate: function(e){
+            console.log('onResizeUpdate', e)
+        },
+        updateBoxes: async function(date){
             let self = this;
+//            console.log('updateBoxes:', date, selfNew)
             date = typeof date == 'string' ? date : moment().format("YYYY-MM-DD")
-            console.log('updateBoxes:', date, typeof date)
-            setTimeout(function(){
-                        console.log('updateBoxes: setTimeout', date, typeof date)
-
-                self._getLocation(date).then(data => self._createBoxes(data));
-            }, 100, date)
+             await  self._getLocation(date).then(function(data) {self._createBoxes(data)});
+//            setTimeout(function(){
+//                        console.log('updateBoxes: setTimeout', date, typeof date)
+//
+//                self._getLocation(date).then(data => self._createBoxes(data));
+//            }, 100, date)
         },
         _getLocation: function(date){
             let self = this;
@@ -358,23 +400,43 @@
                             .then(data => data)
                             .catch(e => console.log(e));
          },
-        _createBoxes: function(data){
+        _createBoxes: function(data, diagram){
             let self = this;
-            let diagram = self.el.querySelectorAll('.diagram_process_form_view_image');
+            diagram = diagram ? diagram : self.el.querySelectorAll('.diagram_process_form_view_image');
             console.log('diagram', diagram)
             let diagramImage = diagram[0].querySelector('img');
              if (!editMode) {
                 diagram[0].innerHTML = '';
                 diagram[0].appendChild(diagramImage)
             }
-            diagramImage.classList.remove('img-fluid');
             let chartBox = '';
             let chartBoxList = Object();
             if(data && data[0] != undefined && data[0].data[0] != undefined ){
                 let values = data[0].data[0].values
 //                console.log('values: ', values, Array.from(values))
                   let session_rtl = session.user_context.lang == 'fa_IR' ? true : false;
+                        console.log('diagramImage:',  diagram[0].querySelectorAll('img'))
+                    console.log('diagramImage: Natural:',  diagramImage.naturalWidth,' x ', diagramImage.naturalHeight)
+                    console.log('diagramImage: Fluid:',  diagramImage.width,' x ', diagramImage.height)
+                    diagramImage.classList.remove('img-fluid');
+                    let originWidth = diagramImage.width
+                    let originHeight = diagramImage.height
 
+                    if (!editMode) {
+                        diagramImage.classList.add('img-fluid');
+                        }
+                    let imageScaleW = (diagramImage.scrollWidth / originWidth).toFixed(4)
+                    let imageScaleH = (diagramImage.scrollHeight / originHeight).toFixed(4)
+
+                    console.log('imageScale WxH:', imageScaleW, imageScaleH)
+//                    imageScale = .3
+//                diagram[0].innerHTML += `
+//                <div class="h4 text-right">
+//                    <div>originWidth: ${originWidth}</div>
+//                    <div>width: ${diagramImage.width}</div>
+//                    <div>scrollWidth: ${diagramImage.scrollWidth}</div>
+//                    <div>imageScale: ${imageScale}</div>
+//                </div>`
                 values.forEach(value => {
                     pointer[value.loc_id] = value;
 //                    console.log(pointer, value)
@@ -383,6 +445,7 @@
                     containerDiv.classList.add('visualize_draggable_div');
                     if (editMode) {
                         containerDiv.classList.add('draggable_move');
+//                        diagramImage.classList.remove('img-fluid');
 
                        let labelDiv = document.createElement("div");
                        labelDiv.innerHTML = `<div class="col-12" style="direction:${session_rtl ? 'rtl' : 'ltr'};">
@@ -434,6 +497,7 @@
                        settingDiv.appendChild(fontSlider);
                        fontSlider.addEventListener('mouseleave', e => moveMode = false)
                     }
+//                    containerDiv.setAttribute('style', 'overflow: hidden;')
 
                     diagram[0].appendChild(containerDiv);
                     containerDiv.id = `data_box_${value.loc_id}`;
@@ -464,7 +528,7 @@
                         plot_layout['height'] =  value.point_h
                         plot_layout['font'] =  {size: value.point_size, color: value.point_color,}
                     }
-                    console.log('typeof Plotly:', typeof Plotly, value.value_id)
+//                    console.log('typeof Plotly:', typeof Plotly, value.value_id)
 
                     typeof Plotly == 'undefined' ? '' :
                         Plotly.newPlot(`chart_${value.value_id}`, plot_value.data, plot_layout, plot_config)
@@ -479,7 +543,16 @@
                     boxContent.classList.add('visualize_box_content', 'h-100', );
                     boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
 
-                    containerDiv.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
+//                    containerDiv.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
+
+                    containerDiv.style.transformOrigin = 'left top'
+//                    containerDiv.setAttribute('style', `-webkit-transform: matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)});`)
+//                    containerDiv.setAttribute('style', `transform: matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)});`)
+//                    containerDiv.style['transform'] = `matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)})`
+
+                    containerDiv.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleH}, ${Number(imageScaleW * value.point_x)}, ${Number(imageScaleH * value.point_y) - 10})`
+//                    containerDiv.style.transform = `scale(${imageScaleW}, ${imageScaleH}) translate( ${Number(imageScaleW * value.point_x)}px, ${Number(imageScaleH * value.point_y) - 10}px)`
+
                     containerDiv.style.width = value.point_w + 'px';
                     containerDiv.style.height = value.point_h + 'px';
                     containerDiv.style.color = value.point_color;
@@ -489,6 +562,17 @@
                     containerDiv.style.fontSize = value.point_size + 'px';
 
                 });
+            }
+            if(!editMode){
+                let coverDiv = document.createElement('div')
+                diagram[0].appendChild(coverDiv)
+                coverDiv.classList.add('temp_cover_div', 'border', )
+                coverDiv.style.width = '100%'
+                coverDiv.style.height = '100%'
+                coverDiv.style.display = 'block'
+                coverDiv.style.position = 'absolute'
+                coverDiv.style.top = '0'
+//                coverDiv.innerHTML = '<div class="text-center h1 text-danger border border-danger">Cover Div</div>'
             }
             let draggable_moves = self.el.querySelectorAll('draggable_move')
          },
