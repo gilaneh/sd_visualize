@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sd_visualize.visualize_show_diagram_template" >
+
+        <div class=" h1 text-center">Abstract</div>
+        <div class=" h1 text-center border border-info">
+            <span > P: </span>
+            <span t-esc="widget.att">  </span>
+        </div>
+    </t>
+
+</templates>

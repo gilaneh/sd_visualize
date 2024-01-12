@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sd_visualize.visualize_diagram_template" owl="1" >
+        <div>
+            <div class=" h1 text-center">Visualize Diagram</div>
+            <div class=" h1 text-center"><span t-esc="state.id"> </span></div>
+            <div class=" h1 text-center"><span t-esc="state.diagram[0].name"> Name</span></div>
+
+        </div>
+    </t>
+
+</templates>
