@@ -69,6 +69,7 @@ publicWidget.registry.sdProjectOverviewFrontend = publicWidget.Widget.extend({
                 Array.from(diagram_options).filter(record => record.id == String(requestedDiagram[0]["diagram_id"]))[0].selected = true;
             }
 
+
             // show the diagram data
             self._showImage(diagram_id)
             self._getDiagramValues(diagram_id).then(data => self._createBoxes(data))

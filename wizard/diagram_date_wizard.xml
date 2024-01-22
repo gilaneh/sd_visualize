@@ -32,11 +32,11 @@
         </record>
 
 
-        <menuitem name="Diagram Date Wizard"
-                  sequence="20"
-                  id="diagram_date_wizard_menu"
-                  parent="sd_visualize.sd_visualize_root_menu"
-                  action="diagram_date_wizard_action"/>
+<!--        <menuitem name="Diagram Date Wizard"-->
+<!--                  sequence="20"-->
+<!--                  id="diagram_date_wizard_menu"-->
+<!--                  parent="sd_visualize.sd_visualize_root_menu"-->
+<!--                  action="diagram_date_wizard_action"/>-->
     </data>
 </odoo>
 

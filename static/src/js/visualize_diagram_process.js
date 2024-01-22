@@ -373,7 +373,7 @@
             return res
         },
         onResizeUpdate: function(e){
-            console.log('onResizeUpdate', e)
+            console.log('onResizeUpdate', e);
         },
         updateBoxes: async function(date){
             let self = this;
@@ -442,7 +442,7 @@
 //                    console.log(pointer, value)
                     let containerDiv = document.createElement("div");
                     let settingDiv = document.createElement("div");
-                    containerDiv.classList.add('visualize_draggable_div');
+                    containerDiv.classList.add('visualize_draggable_div', 'm-0');
                     if (editMode) {
                         containerDiv.classList.add('draggable_move');
 //                        diagramImage.classList.remove('img-fluid');
@@ -550,7 +550,7 @@
 //                    containerDiv.setAttribute('style', `transform: matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)});`)
 //                    containerDiv.style['transform'] = `matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)})`
 
-                    containerDiv.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleH}, ${Number(imageScaleW * value.point_x)}, ${Number(imageScaleH * value.point_y) - 10})`
+                    containerDiv.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleH}, ${Number(imageScaleW * value.point_x)}, ${Number(imageScaleH * value.point_y)})`
 //                    containerDiv.style.transform = `scale(${imageScaleW}, ${imageScaleH}) translate( ${Number(imageScaleW * value.point_x)}px, ${Number(imageScaleH * value.point_y) - 10}px)`
 
                     containerDiv.style.width = value.point_w + 'px';
@@ -563,6 +563,7 @@
 
                 });
             }
+            // add a cover to fix gesture on mobile
             if(!editMode){
                 let coverDiv = document.createElement('div')
                 diagram[0].appendChild(coverDiv)
@@ -719,7 +720,6 @@
             });
             return newObject;
             }
-
     });
 
     var VisualizeDiagramProcessFormView = FormView.extend({

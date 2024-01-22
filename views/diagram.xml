@@ -1,19 +1,33 @@
 <odoo>
     <data>
-        <!-- ==================================================  sd_visualize.diagram ====================-->
+        <!-- ==================================================  sd_visualize.diagram VIEW ====================-->
 
-        <!--        <record model="ir.ui.view" id="sd_visualize_diagram_list1">-->
-        <!--            <field name="name">Diagram</field>-->
-        <!--            <field name="model">sd_visualize.diagram</field>-->
-        <!--            <field name="arch" type="xml">-->
-        <!--                <visualize_show_diagram>-->
-        <!--                    <field name="name"/>-->
-        <!--                    <field name="project" />-->
-        <!--                    <field name="image" widget="image" class="w-25" />-->
-        <!--                </visualize_show_diagram>-->
-        <!--            </field>-->
-        <!--        </record>        -->
-        <!-- ==================================================  sd_visualize.diagram ====================-->
+        <record model="ir.ui.view" id="sd_visualize_diagram_view_list">
+            <field name="name">Diagram</field>
+            <field name="model">sd_visualize.diagram</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="project"/>
+<!--                    <field name="image" widget="visualize_image" options="{'size': [90, 90]}"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sd_visualize_diagram_view_form">
+            <field name="name">Diagram New</field>
+            <field name="model">sd_visualize.diagram</field>
+            <field name="arch" type="xml">
+                <form js_class="visualize_diagram_view">
+                    <div class="text-center">
+                        <field name="image" widget="image" class="diagram_image m-0 p-0"/>
+
+                    </div>
+                    <field name="values" invisible="1" domain="[('display', '=', True)]"/>
+                </form>
+            </field>
+        </record>
+        <!-- ==================================================  sd_visualize.diagram EDIT ====================-->
 
         <record model="ir.ui.view" id="sd_visualize_diagram_list">
             <field name="name">Diagram</field>
@@ -22,7 +36,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="project"/>
-                    <field name="image" widget="image" options="{'size': [90, 90]}"/>
+                    <field name="image" widget="visualize_image" options="{'size': [90, 90]}"/>
                 </tree>
             </field>
         </record>
@@ -49,7 +63,6 @@
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
-                        <!--                            <button name="%(action_window_diagram_full)d" type="action" string="Full Screen" calss="btn btn-success"></button>-->
                     </header>
 
                     <notebook>
@@ -177,10 +190,7 @@
                                     <field name="project"/>
                                 </group>
                                 <group>
-                                    <button name="%(sd_visualize.diagram_date_wizard_action)d" string="Select Date"
-                                            type="action" class="btn btn-primary"></button>
-                                    <!--                                <field name="first_date" readonly="1" />-->
-                                    <!--                                <field name="last_date" readonly="1"/>-->
+
                                 </group>
                             </group>
                         </page>
@@ -312,31 +322,19 @@
             <field name="context">{'search_default_project_group': 1}</field>
         </record>
 
-        <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_new">
-            <field name="name">Diagram New</field>
+        <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_view">
+            <field name="name">Diagram View</field>
             <field name="res_model">sd_visualize.diagram</field>
             <field name="view_mode">tree,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_visualize_diagram_list')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_form_new')})]"/>
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_visualize_diagram_view_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('sd_visualize_diagram_view_form')})]"/>
             <field name="context">{'search_default_project_group': 1}</field>
-            <!--                        <field name="target">fullscreen</field>-->
-
-        </record>
-        <record model="ir.actions.act_window" id="sd_visualize.action_window_diagram_full">
-            <field name="name">Diagram Full</field>
-            <field name="res_model">sd_visualize.diagram</field>
-            <!--            <field name="view_mode">tree,visualize_show_diagram</field>-->
-            <!--            <field name="view_ids" eval="[(5, 0, 0),-->
-            <!--                (0, 0, {'view_mode': 'visualize_show_diagram', 'view_id': ref('sd_visualize.sd_visualize_diagram_list1')})]"/>-->
-            <field name="context">{'search_default_project_group': 1}</field>
-            <field name="target">fullscreen</field>
         </record>
 
         <record model="ir.actions.client" id="action_window_show_diagram">
             <field name="name">sd_visualize.diagram</field>
             <field name="tag">visualize_show_diagram</field>
-
         </record>
         <!-- ==================================================  Menu ====================-->
 
@@ -346,16 +344,10 @@
                   parent="sd_visualize.sd_visualize_root_menu"
                   action="sd_visualize.action_window_diagram"/>
 
-        <!--        <menuitem name="Diagram New"-->
-        <!--                  id="sd_visualize.diagram_new_menu"-->
-        <!--                  parent="sd_visualize.sd_visualize_root_menu"-->
-        <!--                  action="sd_visualize.action_window_show_diagram"/>-->
-
-        <!--        <menuitem name="Diagram New 1"-->
-        <!--                  id="sd_visualize.diagram_new1_menu"-->
-        <!--                  parent="sd_visualize.sd_visualize_root_menu"-->
-        <!--                  action="sd_visualize.action_window_diagram_full"/>-->
-
+        <menuitem name="Diagram view"
+                  id="sd_visualize.diagram_view_menu"
+                  parent="sd_visualize.sd_visualize_root_menu"
+                  action="sd_visualize.action_window_diagram_view"/>
 
     </data>
 </odoo>

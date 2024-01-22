@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from datetime import  datetime, timedelta, date
 # import random
 
@@ -45,4 +46,6 @@ class SdVisualizeValues(models.Model):
               f'res.id: {res.id} loc: {loc}\n'
               )
         return res
+
+
 

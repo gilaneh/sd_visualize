@@ -17,7 +17,7 @@
     # for the full list
     'category': 'Service Desk/Service Desk',
     'application': True,
-    'version': '1.1.3',
+    'version': '1.1.3.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'web', 'mail','project', ],
@@ -30,7 +30,7 @@
         'views/diagram.xml',
         'views/location.xml',
         'views/values.xml',
-        'wizard/diagram_date_wizard.xml',
+        # 'wizard/diagram_date_wizard.xml',
     ],
     'assets': {
         # 'website.assets_editor': [
