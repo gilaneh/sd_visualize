@@ -5,6 +5,7 @@ import FormController from "web.FormController"
 import FormRenderer from "web.FormRenderer"
 import session from 'web.session';
 import viewRegistry from 'web.view_registry';
+import { loadJS } from "web.ajax";
 const { useState, onWillStart, onMounted, onWillUnmount } = owl.hooks
 
 let VisualizeDiagramViewFormController = FormController.extend({
@@ -15,6 +16,23 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
 //        'resize .diagram_image': '_onDiagramResize',
     }),
+    willStart: async function(){
+        let res = this._super.apply(this, arguments);
+        console.log('will start')
+        try {
+            Plotly
+        } catch (e) {
+            const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+            await loadJS(url);
+            }
+        try {
+            html2canvas
+        } catch (e) {
+            const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
+            await loadJS(url);
+            }
+        return res
+    },
     start: function(){
         let self = this;
         // todo: add eventListener on page resize
@@ -77,14 +95,13 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
 
         })
         let coverDiv = document.createElement('div')
-        imageEl.appendChild(coverDiv)
+//        imageEl.appendChild(coverDiv)
         coverDiv.classList.add('temp_cover_div', 'border', )
         coverDiv.style.width = '100%'
         coverDiv.style.height = '100%'
         coverDiv.style.display = 'block'
         coverDiv.style.position = 'absolute'
         coverDiv.style.top = '0'
-//        console.log('this._loadValues(values):', values, this, )
 
     },
 
@@ -99,36 +116,40 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         imageEl.appendChild(containerDiv);
 //        containerDiv.id = `data_box_${divRec.loc_id}`;
         containerDiv.appendChild(boxContent);
-        containerDiv.classList.add('container_div_box', 'visualize_draggable_div', 'm-0')
+        containerDiv.classList.add('container_div_box', 'visualize_draggable_div1', 'm-0')
         containerDiv.id = `container_div_box_${divRec.id}`
+        boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
+        containerDiv.style.position = 'absolute'
+        containerDiv.style.transformOrigin = 'left top'
+
+        containerDiv.style.color = divRec.point_color;
+        containerDiv.style.color = divRec.point_label_show;
+        containerDiv.style.borderColor = divRec.point_border;
+        let newWidth = Math.round(imageScaleW * divRec.point_x)
+        let newHeight = Math.round(imageScaleW * divRec.point_y)
+        containerDiv.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleW}, ${newWidth}, ${newHeight})`
+        containerDiv.style.borderWidth = divRec.point_border_show ? `${divRec.point_border_width}px` : '0px';
+        containerDiv.style.fontSize = divRec.point_size + 'px';
+
         if(divRec.display_type == 'data'){
             boxContent.innerHTML = `
                 <div class="${boxNameClass}" >${divRec.display_name}</div>
                 <div >${divRec.value} ${divRec.symbol ? divRec.symbol : ""}</div>
             `;
+            boxContent.classList.add('visualize_box_content', );
+
         }
         else if (divRec.display_type == 'image'){
             boxContent.innerHTML = `
                 <div class="${boxNameClass}" >${divRec.name}</div>
-                <div class="p-0"><img class="container p-0" src="/web/image?model=sd_visualize.values&id=${divRec.id}&field=image"/></div>
-
+                <div class="p-0"><img class="container p-0"
+                src="/web/image?model=sd_visualize.values&id=${divRec.id}&field=image"/></div>
             `;
+            boxContent.classList.add('visualize_box_content', 'h-100', );
+            containerDiv.style.width = divRec.point_w + 'px';
+            containerDiv.style.height = divRec.point_h + 'px';
         }
-        boxContent.classList.add('visualize_box_content', 'h-100', );
-        boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
-        containerDiv.style.position = 'absolute'
-        containerDiv.style.transformOrigin = 'left top'
-//        boxContent.classList.add('border', 'border-danger')
-        let newWidth = Math.round(imageScaleW * divRec.point_x)
-        let newHeight = Math.round(imageScaleW * divRec.point_y)
-        containerDiv.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleW}, ${newWidth}, ${newHeight})`
-        containerDiv.style.width = divRec.point_w + 'px';
-        containerDiv.style.height = divRec.point_h + 'px';
-        containerDiv.style.color = divRec.point_color;
-        containerDiv.style.color = divRec.point_label_show;
-        containerDiv.style.borderColor = divRec.point_border;
-        containerDiv.style.borderWidth = divRec.point_border_show ? `${divRec.point_border_width}px` : '0px';
-        containerDiv.style.fontSize = divRec.point_size + 'px';
+
         containerDiv.appendChild(boxContent)
 //        let debugDiv = document.createElement('div')
 //        debugDiv.classList.add('debug_div')
@@ -367,5 +388,5 @@ let VisualizeDiagramViewFormView = FormView.extend({
 viewRegistry.add("visualize_diagram_view", VisualizeDiagramViewFormView);
 export default {
     VisualizeDiagramViewFormView,
-//    VisualizeDiagramViewFormController,
+    VisualizeDiagramViewFormRenderer,
 }

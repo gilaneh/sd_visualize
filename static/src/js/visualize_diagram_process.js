@@ -8,7 +8,7 @@
     import viewRegistry from 'web.view_registry';
     import session from 'web.session';
     import { loadJS } from "web.ajax";
-    const { onMounted, onWillUnmount, onWillStart, useExternalListener, useRef, useState, useSubEnv } = owl.hooks;
+    const { onMounted, onWillUnmount, onWillStart, onWillRender, useExternalListener, useRef, useState, useSubEnv } = owl.hooks;
     import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker"
 
     let pointer = Object();
@@ -207,6 +207,23 @@
             'click .select_date_update ': 'onDateChange',
             'click .btn_full_screen_report ': 'onFullScreen',
         },
+        willStart: async function(){
+            let res = this._super.apply(this, arguments);
+            console.log('will start')
+            try {
+                Plotly
+            } catch (e) {
+                const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+                await loadJS(url);
+                }
+            try {
+                html2canvas
+            } catch (e) {
+                const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
+                await loadJS(url);
+                }
+            return res
+        },
         /**
          * @override
          */
@@ -214,36 +231,35 @@
             let self = this;
             var res = this._super.apply(this, arguments);
             this.state = self.state
-            console.log('Render start',)
+//            console.log('Render start',VisualizeDiagramView)
             onMounted(async ()=>{
                 self.onDateChange('render')
                 window.addEventListener("resize", self._print_pdf_button);
-//                window.addEventListener("resize", self.updateBoxes.bind('d', self));
-                $(window).on('resize', { date: '', picker: this }, this.onResizeUpdate);
-//                this.updateSize();
-                  self._print_pdf_button()
-                try {
-                    Plotly
-                } catch (e) {
-                    const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
-                    await loadJS(url);
-                    }
-                try {
-                    html2canvas
-                } catch (e) {
-                    const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
-                    await loadJS(url);
-                    }
+//                window.addEventListener("resize", self._onResize);
+
+                self._print_pdf_button()
+
+//                try {
+//                    Plotly
+//                } catch (e) {
+//                    const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+//                    await loadJS(url);
+//                    }
+//                try {
+//                    html2canvas
+//                } catch (e) {
+//                    const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
+//                    await loadJS(url);
+//                    }
 
             });
             onWillUnmount(()=>{
                 window.removeEventListener("resize", self._print_pdf_button)
-                window.removeEventListener("resize", self.updateBoxes)
-                      console.log('Render start onWillUnmount')
+                window.removeEventListener("resize", self._onResize);
             });
-            onWillStart(async ()=>{
-                console.log('Render start onWillStart')
-            })
+//            onWillRender(async ()=>{
+//                console.log('Render start onWillRender')
+//            })
             this._interact();
             return res
         },
@@ -252,6 +268,27 @@
             console.log('Render _render')
             return res
         },
+        _onResize: function(e){
+        let self = this;
+        let diagramImage = document.querySelector('.diagram_process_form_view_image').querySelector('img')
+        let imageScaleW = (diagramImage.scrollWidth / diagramImage.naturalWidth ).toFixed(4)
+        let imageScaleH = (diagramImage.scrollHeight /  diagramImage.naturalHeight ).toFixed(4)
+        let boxContents = document.querySelectorAll('.container_div_box')
+        boxContents.forEach(boxContent => {
+            let container_div_box_attributes = window.diagramValues.filter(r=> `container_div_box_${r.id}` == boxContent.id)
+            let newWidth = Math.round(imageScaleW * container_div_box_attributes[0].point_x)
+            let newHeight = Math.round(imageScaleW * container_div_box_attributes[0].point_y)
+            boxContent.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleH}, ${newWidth}, ${newHeight})`
+//            let debugDiv = boxContent.querySelector('.debug_div')
+//            debugDiv.innerHTML = `
+//            <div class="row" style="font-size: 15px; background: #ffffff75;">
+//               <div class="col"> ${newWidth} x ${newHeight} </div>
+//               <div class="col"> ${imageScaleW}</div>
+//            </div>
+//            `;
+        })
+    },
+
         onFullScreen: async function(e,){
             let self = this
             console.log(e, self)
@@ -442,10 +479,19 @@
 //                    console.log(pointer, value)
                     let containerDiv = document.createElement("div");
                     let settingDiv = document.createElement("div");
-                    containerDiv.classList.add('visualize_draggable_div', 'm-0');
+                    if (value.display_type == 'data'){
+                        containerDiv.classList.add('visualize_draggable_div', 'data_div', 'm-0');
+                    }else{
+                        containerDiv.classList.add('visualize_draggable_div', 'm-0');
+                    }
+
                     if (editMode) {
-                        containerDiv.classList.add('draggable_move');
 //                        diagramImage.classList.remove('img-fluid');
+                        if (value.display_type == 'data'){
+                            containerDiv.classList.add('draggable_move_noresize');
+                        }else{
+                            containerDiv.classList.add('draggable_move');
+                        }
 
                        let labelDiv = document.createElement("div");
                        labelDiv.innerHTML = `<div class="col-12" style="direction:${session_rtl ? 'rtl' : 'ltr'};">
@@ -539,28 +585,22 @@
 
                     `;
                     }
-//                    boxContent.classList.add( 'h-100', 'w-100');
-                    boxContent.classList.add('visualize_box_content', 'h-100', );
                     boxContent.style.direction = session_rtl ? 'rtl' : 'ltr';
-
-//                    containerDiv.style.transform = `translate(${value.point_x}px, ${value.point_y}px)`
-
                     containerDiv.style.transformOrigin = 'left top'
-//                    containerDiv.setAttribute('style', `-webkit-transform: matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)});`)
-//                    containerDiv.setAttribute('style', `transform: matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)});`)
-//                    containerDiv.style['transform'] = `matrix(${imageScale}, 0, 0, ${imageScale}, ${Number(imageScale * value.point_x)}, ${Number(imageScale * value.point_y)})`
-
+                    containerDiv.style.borderWidth = value.point_border_show ? `${value.point_border_width}px` : '0px';
                     containerDiv.style.transform = `matrix(${imageScaleW}, 0, 0, ${imageScaleH}, ${Number(imageScaleW * value.point_x)}, ${Number(imageScaleH * value.point_y)})`
-//                    containerDiv.style.transform = `scale(${imageScaleW}, ${imageScaleH}) translate( ${Number(imageScaleW * value.point_x)}px, ${Number(imageScaleH * value.point_y) - 10}px)`
-
-                    containerDiv.style.width = value.point_w + 'px';
-                    containerDiv.style.height = value.point_h + 'px';
+                    containerDiv.style.fontSize = value.point_size + 'px';
                     containerDiv.style.color = value.point_color;
                     containerDiv.style.color = value.point_label_show;
-                    containerDiv.style.borderColor = value.point_border;
-                    containerDiv.style.borderWidth = value.point_border_show ? `${value.point_border_width}px` : '0px';
-                    containerDiv.style.fontSize = value.point_size + 'px';
 
+                    if (value.display_type == 'data'){
+                        boxContent.classList.add('visualize_box_content1', );
+                    }else{
+                        boxContent.classList.add('visualize_box_content', 'h-100', );
+                        containerDiv.style.width = value.point_w + 'px';
+                        containerDiv.style.height = value.point_h + 'px';
+                        containerDiv.style.borderColor = value.point_border;
+                    }
                 });
             }
             // add a cover to fix gesture on mobile
@@ -585,6 +625,7 @@
         _interact: function(){
             let self = this;
             let moveCounter = 0;
+
             interact('.draggable_move')
             .draggable({
             // enable inertial throwing
@@ -624,7 +665,132 @@
           })
             .resizable({
                 preserveAspectRatio: true,
-                edges: { left: false, right: true, bottom: true, top: false }
+                edges: { left: false, right: true, bottom: true, top: false },
+            })
+            .on('mouseover', function(event){
+                if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
+                    moveMode = true;
+                }
+
+            })
+            .on('input', function(event){
+                const box_id = Number(event.currentTarget.id.replace('data_box_', ''));
+                    const chartBox = event.currentTarget.children[2].children[1]
+                if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
+                    let value = Number(event.originalEvent.srcElement.value);
+                    event.currentTarget.style.fontSize = value + 'px';
+
+                    if(chartBox && chartBox.classList.contains('chart_box')){
+                        Plotly.relayout(chartBox, {font: {size: value} })
+                    }
+                    pointer[box_id]['point_size'] = value;
+                } else if (event.originalEvent.srcElement.classList.contains('draggable_font_color')){
+                    let value = event.originalEvent.srcElement.value;
+                    event.currentTarget.style.color = value;
+//                    todo: changing the color is changing the size to its last saved value and vice versa
+//                    if(chartBox && chartBox.classList.contains('chart_box')){
+//                        Plotly.relayout(chartBox, {font: {color: value} })
+//                    }
+                    pointer[box_id]['point_color'] = value;
+                } else if (event.originalEvent.srcElement.classList.contains('draggable_border_show')){
+                    const border_checked = event.originalEvent.srcElement.checked;
+                    event.currentTarget.style.borderWidth =  border_checked ? '5px' : '0px';
+                    pointer[box_id]['point_border_show'] = border_checked;
+                } else if (event.originalEvent.srcElement.classList.contains('visualize_box_content_no_label')){
+                    const label_checked = event.originalEvent.srcElement.checked;
+
+                    let label = event.currentTarget.querySelector('.visualize_box_content_label');
+                    label_checked ? label.classList.remove('d-none') : label.classList.add('d-none')
+
+                    pointer[box_id]['point_label_show'] = label_checked;
+                }else if (event.originalEvent.srcElement.classList.contains('draggable_border_color')){
+                    let value = event.originalEvent.srcElement.value;
+                    event.currentTarget.style.borderColor = value;
+                        pointer[box_id]['point_border'] = value;
+                }
+            })
+            .on('resizemove', function (event) {
+                if(moveMode){
+                    return
+                }
+                const box_id = Number(event.target.id.replace('data_box_', ''));
+                var target = event.target;
+//                        x = (parseFloat(target.getAttribute('data-x')) || localStorage.getItem('x')),
+//                        y = (parseFloat(target.getAttribute('data-y')) || localStorage.getItem('y'));
+//                        console.log(Math.round(x), Math.round(parseFloat(target.getAttribute('data-x'))), Math.round(event.dx),localStorage.getItem('x'))
+//                const chartBox = event.target.querySelector('.chart_box')
+                const chartBox = event.target.children[2].children[1]
+//                console.log(event, event.target, chartBox)
+                if(++moveCounter == 3 && chartBox.classList.contains('chart_box')){
+                    moveCounter = 0;
+                    Plotly.relayout(chartBox, {width: event.rect.width, height: event.rect.height  })
+                }
+
+                // update the element's style
+                target.style.width  = event.rect.width + 'px';
+                target.style.height = event.rect.height + 'px';
+
+                // translate when resizing from top or left edges
+//                    x += event.deltaRect.left;
+//                    y += event.deltaRect.top;
+                pointer[box_id]['point_w'] = Math.round(event.rect.width);
+                pointer[box_id]['point_h'] = Math.round(event.rect.height);
+
+                // localStorage.setItem('x', x)
+                // localStorage.setItem('y', y)
+                // target.style.webkitTransform = target.style.transform =
+                //     'translate(' + x + 'px,' + y + 'px)';
+
+                // target.setAttribute('data-x', x);
+                // target.setAttribute('data-y', y);
+//                    target.style.fontSize = .15 * event.rect.width + 'px';
+//                    localStorage.setItem('width', event.rect.width + 'px')
+//                    localStorage.setItem('height', event.rect.height + 'px')
+//                    localStorage.setItem('fontSize', target.style.fontSize)
+                // target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
+                // target.textContent = event.rect.width + '×' + event.rect.height;
+                });
+
+            interact('.draggable_move_noresize')
+            .draggable({
+            // enable inertial throwing
+            inertia: true,
+            // keep the element within the area of it's parent
+            modifiers: [
+              interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+              })
+            ],
+            // enable autoScroll
+            autoScroll: true,
+
+            listeners: {
+              // call this function on every dragmove event
+              move (event){
+                self._dragMoveListener(event);
+              },
+
+              // call this function on every dragend event
+              end (event) {
+                var textEl = event.target.querySelector('.drag-results')
+
+                textEl && (textEl.innerText =
+                  'rect: ' + Math.round(event.rect.left) + ' x ' + Math.round(event.rect.top) +
+                  // '\npage: ' + Math.round(event.pageX) + ' x ' + Math.round(event.pageY) +
+                  // '\nclient: ' + Math.round(event.client.x) + ' x ' + Math.round(event.client.y) +
+                  // '\nx0: ' + Math.round(event.x0) + ' x ' + Math.round(event.y0) +
+                  // '\nmoved a distance of ' +
+                  (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
+                             Math.pow(event.pageY - event.y0, 2) | 0))
+                    .toFixed(2) + 'px')
+
+              }
+            }
+          })
+            .resizable({
+                preserveAspectRatio: true,
+                edges: { left: false, right: false, bottom: false, top: false },
             })
             .on('mouseover', function(event){
                 if (event.originalEvent.srcElement.classList.contains('draggable_font_size')){
