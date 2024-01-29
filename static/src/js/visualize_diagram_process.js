@@ -560,6 +560,12 @@
                         <div >${value.value} ${value.symbol ? value.symbol : ""}</div>
 
                     `;
+                    }else if(value.display_type == 'box'){
+                    boxContent.innerHTML = `
+                        <div class="${boxNameClass}" >${value.name}</div>
+                        <div >${value.value ? value.value : ''}</div>
+
+                    `;
                     } else if (value.display_type == 'chart'){
                     boxContent.innerHTML = `
                         <div class="${boxNameClass}" >${value.name}</div>

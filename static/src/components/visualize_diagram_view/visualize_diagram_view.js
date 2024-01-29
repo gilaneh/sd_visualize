@@ -38,6 +38,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         // todo: add eventListener on page resize
         onMounted(async ()=>{
             window.addEventListener("resize", self._onResize);
+            console.log('onMounted: Plotly', Plotly)
         })
         onWillUnmount(async ()=>{
             window.removeEventListener("resize", self._onResize);
@@ -71,6 +72,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         this.value_res_ids = this.state.data.values.res_ids
         this._getDiagramData()
             .then(data=>{
+
                 self.state.diagramValues = JSON.parse(data);
                 window.diagramValues = JSON.parse(data);
                 self._loadValues(JSON.parse(data))
@@ -82,6 +84,21 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     _loadValues: function(values){
         let self = this;
         let imageEl = this.el.querySelector('.diagram_image')
+
+//         todo: the o_web_client contains direction: rtl which it makes the page horizontally over size.
+//              I have found that cssrtl has a problem with the plotly.
+//              https://rtlcss.com/learn/usage-guide/control-directives/
+
+//        let o_main_navbar = document.querySelector('.o_main_navbar')
+//        document.body.classList.remove('o_web_client')
+
+//        let o_content = document.querySelector('.o_content')
+//        let chart_1 = document.createElement('div')
+//        chart_1.id = 'chart_chart_1'
+//        document.body.appendChild(chart_1)
+//
+//        Plotly.newPlot1('chart_chart_1', {})
+
         let session_rtl = session.user_context.lang == 'fa_IR' ? true : false;
         imageEl.style.direction = session_rtl ? 'ltr' : 'rtl'
         let diagramImage = imageEl.querySelector('img');
@@ -139,6 +156,15 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
             boxContent.classList.add('visualize_box_content', );
 
         }
+        else if(divRec.display_type == 'box'){
+            boxContent.innerHTML = `
+                <div class="${boxNameClass}" >${divRec.name}</div>
+                <div >${divRec.value ? divRec.value : ''}</div>
+            `;
+            boxContent.classList.add('visualize_box_content', 'h-100', );
+            containerDiv.style.width = divRec.point_w + 'px';
+            containerDiv.style.height = divRec.point_h + 'px';
+        }
         else if (divRec.display_type == 'image'){
             boxContent.innerHTML = `
                 <div class="${boxNameClass}" >${divRec.name}</div>
@@ -149,6 +175,26 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
             containerDiv.style.width = divRec.point_w + 'px';
             containerDiv.style.height = divRec.point_h + 'px';
         }
+        else if (divRec.display_type == 'chart'){
+                    boxContent.innerHTML = `
+                        <div class="${boxNameClass}" >${divRec.name}</div>
+                        <div id="chart_${divRec.id}" class="chart_box p-0" > </div>
+                    `;
+                    let plot_value = JSON.parse(divRec.value);
+//                    console.log('boxing:', plot_value)
+                    let plot_config = plot_value.config || {}
+                    let plot_layout = plot_value.layout || {}
+//                    plot_config['local'] = 'fr'
+                    if (plot_layout){
+                        plot_layout['width'] =  divRec.point_w
+                        plot_layout['height'] =  divRec.point_h
+                        plot_layout['font'] =  {size: divRec.point_size, color: divRec.point_color,}
+                    }
+                    console.log('Plotly:', typeof Plotly, divRec.id)
+
+                    typeof Plotly == 'undefined' ? '' :
+                        Plotly.newPlot(`chart_${divRec.id}`, plot_value.data, plot_layout, plot_config)
+                    }
 
         containerDiv.appendChild(boxContent)
 //        let debugDiv = document.createElement('div')

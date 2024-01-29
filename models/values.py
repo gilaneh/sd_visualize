@@ -16,6 +16,7 @@ class SdVisualizeValues(models.Model):
 
     display_name = fields.Char(required=True, )
     display_type = fields.Selection([('data', 'Data'),
+                                     ('box', 'Box'),
                                      ('image', 'Image'),
                                      ('chart', 'Chart'),
                                      ], default='data', required=True)
