@@ -131,6 +131,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     },
     _loadValues: function(values){
         let self = this;
+        if(values[0] == undefined) return;
         let imageEl = this.el.querySelector('.diagram_image')
 
 //         todo: the o_web_client contains direction: rtl which it makes the page horizontally over size.
