@@ -20,10 +20,18 @@
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_view">
                     <div class="text-center">
-                        <field name="image" widget="image" class="diagram_image m-0 p-0"/>
+                        <div class="start_date_field o_datepicker o_field_widget"></div>
+                        <div name="print_pdf" class="btn btn-success mx-2 btn_print_pdf"
+                             data-toggle="tooltip" data-placement="top" title="">
+                            <i class="fa fa-camera"></i>
+                        </div>
 
                     </div>
+                    <div class="text-center">
+                        <field name="image" widget="image" class="diagram_image m-0 p-0"/>
+                    </div>
                     <field name="values" invisible="1" domain="[('display', '=', True)]"/>
+                    <field name="function_name" invisible="1"/>
                 </form>
             </field>
         </record>
@@ -64,6 +72,7 @@
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
                     </header>
+                        <div class="start_date_field o_datepicker o_field_widget"></div>
 
                     <notebook>
                         <page string="Image" class="sd_visualize_image_page text-center">
@@ -74,7 +83,7 @@
 
                             <!--                            </group>-->
                             <div>
-                                <div class="row col-lg-6">
+                                <div class="row col-lg-6 d-none" >
                                     <div class="row select_date_update mx-2 border rounded border-info">
                                         <div class=" ">
                                             <select class="custom-select form-select-year" t-model="state.year"
@@ -92,7 +101,6 @@
                                                 <option value="1405">1405</option>
                                                 <option value="1406">1406</option>
                                             </select>
-
                                         </div>
                                         <div class="">
                                             <select class="custom-select form-select-month" t-model="state.month"
@@ -178,7 +186,6 @@
                                 <div class="text-center">
                                     <field name="image" class="diagram_process_form_view_image border"
                                            style="direction: initial;" widget="image"/>
-
                                 </div>
                             </div>
                         </page>
@@ -260,6 +267,8 @@
                 <form js_class="visualize_diagram_process_form_view">
                     <header>
                     </header>
+                    <div class="start_date_field o_datepicker o_field_widget"></div>
+
                     <div name="print_pdf" class="btn btn-success mx-1  btn_print_pdf" data-toggle="tooltip"
                          data-placement="top" title="">
                         <i class="fa fa-camera"></i>
