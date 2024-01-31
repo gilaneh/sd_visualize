@@ -600,7 +600,8 @@ _onDatepicker: function(ev){
             });
         }
         // add a cover to fix gesture on mobile
-        if(!editMode){
+//        if(!editMode){
+        if(false){
             let coverDiv = document.createElement('div')
             diagram[0].appendChild(coverDiv)
             coverDiv.classList.add('temp_cover_div', 'border', )
