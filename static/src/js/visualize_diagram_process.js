@@ -430,12 +430,12 @@ _onDatepicker: function(ev){
     _createBoxes: function(data, diagram){
         let self = this;
         diagram = diagram ? diagram : self.el.querySelectorAll('.diagram_process_form_view_image');
-        console.log('diagram', diagram)
         let diagramImage = diagram[0].querySelector('img');
-         if (!editMode) {
-            diagram[0].innerHTML = '';
-            diagram[0].appendChild(diagramImage)
-        }
+
+//         if (!editMode) {
+//            diagram[0].innerHTML = '';
+//            diagram[0].appendChild(diagramImage)
+//        }
         let chartBox = '';
         let chartBoxList = Object();
         if(data && data[0] != undefined && data[0].data[0] != undefined ){
