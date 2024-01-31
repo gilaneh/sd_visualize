@@ -151,9 +151,10 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         imageEl.style.direction = session_rtl ? 'ltr' : 'rtl'
         let diagramImage = imageEl.querySelector('img');
 
+        console.log('values[0]', values[0])
 
-        let imageScaleW = (diagramImage.scrollWidth / values[0].image_x || diagramImage.scrollWidth).toFixed(4)
-        let imageScaleH = (diagramImage.scrollHeight /  values[0].image_y || diagramImage.scrollHeight).toFixed(4)
+        let imageScaleW = (diagramImage.scrollWidth / values[0].image_x ).toFixed(4)
+        let imageScaleH = (diagramImage.scrollHeight /  values[0].image_y ).toFixed(4)
         console.log('origin', values[0].image_x,'x', values[0].image_y,)
         console.log('Scale', imageScaleW,'x', imageScaleH,)
         values.forEach(divRec =>{
