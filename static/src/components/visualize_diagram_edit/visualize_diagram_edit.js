@@ -17,25 +17,25 @@ let VisualizeDiagramEditFormRenderer = FormRenderer.extend({
         let self = this;
         // todo: add eventListener on page resize
             onMounted(async ()=>{
-                console.log('Render start onMounted', self)
+//                console.log('Render start onMounted', self)
 //                self.el.addEventListener("resize", self.updateBoxes);
                 core.bus.on("resize", self, self.updateBoxes);
             });
             onWillUnmount(()=>{
                 self.el.removeEventListener("resize", self.updateBoxes)
-                console.log('Render start onWillUnmount')
+//                console.log('Render start onWillUnmount')
             });
         return this._super.apply(this, arguments);
     },
     updateBoxes: function(e){
-        console.log(e)
+//        console.log(e)
     },
     _render: function(){
         let self = this;
         this.rec_id = this.state.data.id
         this.value_res_ids = this.state.data.values.res_ids
 
-        console.log('VisualizeDiagramView: _render', this.rec_id,this.value_res_ids, this)
+//        console.log('VisualizeDiagramView: _render', this.rec_id,this.value_res_ids, this)
         this._getDiagramData()
             .then(data=>{
                         self.values = data;

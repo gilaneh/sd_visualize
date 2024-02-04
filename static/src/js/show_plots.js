@@ -43,7 +43,7 @@ myPlot('my_plot');
             let project_id = self.renderer.state.data['project'];
             let start_date = self.renderer.state.data['start_date'];
             let end_date = self.renderer.state.data['end_date'];
-            console.log('_onFieldChanged', ev);
+//            console.log('_onFieldChanged', ev);
             if(ev.data.changes.project){
                 project_id = ev.data.changes.project.id;
             } else if (ev.data.changes.start_date){

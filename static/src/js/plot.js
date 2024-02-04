@@ -3,7 +3,7 @@
 
 
 var myPlot = function(x){
-console.log('plot', x);
+//console.log('plot', x);
 
 }
 

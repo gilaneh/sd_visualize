@@ -212,7 +212,7 @@ var VisualizeDiagramProcessRenderer = FormRenderer.extend({
     },
     willStart: async function(){
         let res = this._super.apply(this, arguments);
-        console.log('will start')
+//        console.log('will start')
         try {
             Plotly
         } catch (e) {
@@ -253,7 +253,7 @@ var VisualizeDiagramProcessRenderer = FormRenderer.extend({
     },
 _render(){
     var res = this._super.apply(this, arguments);
-    console.log('Render _render')
+//    console.log('Render _render')
     return res
 },
 _onResize: function(e){
@@ -279,7 +279,7 @@ _onResize: function(e){
 
 onFullScreen: async function(e,){
         let self = this
-        console.log(e, self)
+//        console.log(e, self)
         let diagram = self.el.querySelectorAll('.diagram_process_form_view_image')
         let full_screen = document.createElement('div')
         document.body.appendChild(full_screen)
@@ -294,7 +294,7 @@ onFullScreen: async function(e,){
         <div class="report_image"></div>
 
         `
-        console.log('full_screen',full_screen.childNodes)
+//        console.log('full_screen',full_screen.childNodes)
         full_screen.childNodes[1].addEventListener('click', ()=> full_screen.remove())
 //            self.updateBoxes().then((data)=>console.log('self.updateBoxes',data))
 //            await  self._getLocation().then(function(data) {self._createBoxes(data, full_screen.childNodes[3])});
@@ -400,7 +400,7 @@ _onDatepicker: function(ev){
     ev.stopPropagation();
 },
     onResizeUpdate: function(e){
-        console.log('onResizeUpdate', e);
+//        console.log('onResizeUpdate', e);
     },
     updateBoxes: async function(date){
         let self = this;
@@ -416,7 +416,7 @@ _onDatepicker: function(ev){
     _getLocation: function(date){
         let self = this;
 //            console.log('_getLocation', self.state)
-        console.log('_getLocation:', date, typeof date)
+//        console.log('_getLocation:', date, typeof date)
 
         return self._rpc({
                             model: 'sd_visualize.diagram',
@@ -442,9 +442,9 @@ _onDatepicker: function(ev){
             let values = data[0].data[0].values
 //                console.log('values: ', values, Array.from(values))
               let session_rtl = session.user_context.lang == 'fa_IR' ? true : false;
-                    console.log('diagramImage:',  diagram[0].querySelectorAll('img'))
-                console.log('diagramImage: Natural:',  diagramImage.naturalWidth,' x ', diagramImage.naturalHeight)
-                console.log('diagramImage: Fluid:',  diagramImage.width,' x ', diagramImage.height)
+//                    console.log('diagramImage:',  diagram[0].querySelectorAll('img'))
+//                console.log('diagramImage: Natural:',  diagramImage.naturalWidth,' x ', diagramImage.naturalHeight)
+//                console.log('diagramImage: Fluid:',  diagramImage.width,' x ', diagramImage.height)
                 diagramImage.classList.remove('img-fluid');
                 let originWidth = diagramImage.width
                 let originHeight = diagramImage.height
@@ -455,7 +455,7 @@ _onDatepicker: function(ev){
                 let imageScaleW = (diagramImage.scrollWidth / originWidth).toFixed(4)
                 let imageScaleH = (diagramImage.scrollHeight / originHeight).toFixed(4)
 
-                console.log('imageScale WxH:', imageScaleW, imageScaleH)
+//                console.log('imageScale WxH:', imageScaleW, imageScaleH)
 //                    imageScale = .3
 //                diagram[0].innerHTML += `
 //                <div class="h4 text-right">
@@ -616,7 +616,7 @@ _onDatepicker: function(ev){
      },
     _fontSlider: function(fontSlider){
         fontSlider.addEventListener('change', e => {
-            console.log(e.currentTarget.value);
+//            console.log(e.currentTarget.value);
         })
      },
     _interact: function(){

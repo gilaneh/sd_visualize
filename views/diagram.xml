@@ -347,16 +347,19 @@
         </record>
         <!-- ==================================================  Menu ====================-->
 
-
-        <menuitem name="Diagram"
-                  id="sd_visualize.diagram_menu"
-                  parent="sd_visualize.sd_visualize_root_menu"
-                  action="sd_visualize.action_window_diagram"/>
-
         <menuitem name="Diagram view"
+                  sequence="10"
                   id="sd_visualize.diagram_view_menu"
                   parent="sd_visualize.sd_visualize_root_menu"
                   action="sd_visualize.action_window_diagram_view"/>
+
+        <menuitem name="Diagram"
+                  sequence="20"
+                  id="sd_visualize.diagram_menu"
+                  parent="sd_visualize.sd_visualize_root_menu"
+                  action="sd_visualize.action_window_diagram"
+                  groups="sd_visualize.group_sd_visualize_admins"/>
+
 
     </data>
 </odoo>

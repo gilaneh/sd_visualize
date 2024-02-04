@@ -66,7 +66,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     _onResize: function(e){
         let self = this;
         let diagramImage = document.querySelector('.diagram_image').querySelector('img')
-        console.log('values[0]:', window.diagramValues[0].image_x)
+//        console.log('values[0]:', window.diagramValues[0].image_x)
 
         let imageScaleW = (diagramImage.scrollWidth / window.diagramValues[0].image_x).toFixed(4)
         let imageScaleH = (diagramImage.scrollHeight /  window.diagramValues[0].image_y).toFixed(4)
@@ -95,7 +95,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     _updateElements: function(date){
         let self = this;
         let container_div_box = this.el.querySelectorAll('.container_div_box')
-        console.log('container_div_box' , container_div_box )
+//        console.log('container_div_box' , container_div_box )
         container_div_box.forEach(div => div.remove())
         this._getDiagramData(date)
         .then(data=>{
@@ -152,12 +152,12 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         imageEl.style.direction = session_rtl ? 'ltr' : 'rtl'
         let diagramImage = imageEl.querySelector('img');
 
-        console.log('values[0]', values[0])
+//        console.log('values[0]', values[0])
 
         let imageScaleW = (diagramImage.scrollWidth / values[0].image_x ).toFixed(4)
         let imageScaleH = (diagramImage.scrollHeight /  values[0].image_y ).toFixed(4)
-        console.log('origin', values[0].image_x,'x', values[0].image_y,)
-        console.log('Scale', imageScaleW,'x', imageScaleH,)
+//        console.log('origin', values[0].image_x,'x', values[0].image_y,)
+//        console.log('Scale', imageScaleW,'x', imageScaleH,)
         values.forEach(divRec =>{
             self.loadBoxEl(imageEl, divRec, session_rtl, imageScaleW, imageScaleH)
 
@@ -274,7 +274,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         return true
     },
     _print_pdf: function(e){
-            console.log('render print pdf')
+//            console.log('render print pdf')
             if (!this._print_pdf_button()){return}
 //            let coverDiv = document.querySelector('.temp_cover_div')
 //            coverDiv.style.zIndex = -1
