@@ -19,11 +19,26 @@
             <field name="model">sd_visualize.diagram</field>
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_view">
-                    <div class="text-center">
-                        <div class="start_date_field o_datepicker o_field_widget"></div>
-                        <div name="print_pdf" class="btn btn-success mx-2 btn_print_pdf"
-                             data-toggle="tooltip" data-placement="top" title="">
-                            <i class="fa fa-camera"></i>
+                    <div class=" row text-center mx-auto">
+                        <div class="mx-5">
+                            <field name="report_duration"/>
+                        </div>
+                        <div class="col">
+
+                            <div class="next_day_btn btn btn-outline-dark mx-2 py-0">
+                                <i class="fa fa-chevron-left"></i>
+                            </div>
+
+                            <div class="start_date_field o_datepicker o_field_widget"></div>
+
+                            <div class="previous_day_btn btn btn-outline-dark mx-2 py-0">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+
+                            <div name="print_pdf" class="btn btn-success mx-2 btn_print_pdf"
+                                 data-toggle="tooltip" data-placement="top" title="">
+                                <i class="fa fa-camera"></i>
+                            </div>
                         </div>
 
                     </div>
@@ -194,7 +209,8 @@
                                 <group>
                                     <field name="update" invisible="1"/>
                                     <field name="name"/>
-                                    <field name="project"/>
+                                    <field name="report_duration"/>
+<!--                                    <field name="project"/>-->
                                 </group>
                                 <group>
 

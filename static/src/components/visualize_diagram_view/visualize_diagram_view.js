@@ -21,6 +21,9 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .o_datepicker': '_onDatepicker',
         'click .btn_print_pdf ': '_print_pdf',
+//        'click .previous_day_btn ': '_onPreviousDay',
+//        'click .next_day_btn ': '_onNextDay',
+        'click .previous_day_btn, .next_day_btn ': '_onNextPreviousDay',
 
     }),
     willStart: async function(){
@@ -62,6 +65,44 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
 //        this.DateTimeW.$input.do_show()
 //        this.DateTimeW.$input.click();
 
+    },
+    _onNextPreviousDay: function(ev){
+        let value = this.DateTimeW.getValue()
+        if (ev.currentTarget.classList.contains('previous_day_btn')){
+            value = value.add(-1 * this._dayDiff(), 'days');
+        }else if (ev.currentTarget.classList.contains('next_day_btn')){
+            value = value.add(this._dayDiff(), 'days');
+        }
+        this.DateTimeW.setValue(value);
+//        todo: if you hit the button several times, it will show data on top of the old one.
+        this._updateElements(value.format("YYYY-MM-DD"))
+        },
+    _onPreviousDay: function(ev){
+        console.log(ev.currentTarget.classList.contains('previous_day_btn'))
+        let value = this.DateTimeW.getValue().add(-1 * this._dayDiff(), 'days');
+        this.DateTimeW.setValue(value);
+        this._updateElements(value.format("YYYY-MM-DD"))
+    },
+    _onNextDay: function(ev){
+        let value = this.DateTimeW.getValue().add(1 * this._dayDiff(), 'days');
+        this.DateTimeW.setValue(value);
+        this._updateElements(value.format("YYYY-MM-DD"))
+    },
+    _dayDiff: function(){
+        let dayDiff = 1
+        if(this.state.data.report_duration == 'weekly'){
+            dayDiff = 7
+        } else if(this.state.data.report_duration == 'monthly'){
+//        todo: make sure it is on the other month based on 29 or 31 days of some months
+            dayDiff = 30
+        } else if(this.state.data.report_duration == 'seasonal'){
+            dayDiff = 90
+        } else if(this.state.data.report_duration == 'half_year'){
+            dayDiff = 180
+        } else if(this.state.data.report_duration == 'yearly'){
+            dayDiff = 365
+        }
+        return dayDiff;
     },
     _onResize: function(e){
         let self = this;

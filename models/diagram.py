@@ -23,6 +23,13 @@ class SdVisualizeDiagram(models.Model):
     update = fields.Boolean(default=False, compute='update_compute')
     calculator = fields.Many2one('ir.model',  )
     function_name = fields.Char()
+    report_duration = fields.Selection([('daily', 'Daily'),
+                                        ('weekly', 'Weekly'),
+                                        ('monthly', 'Monthly'),
+                                        ('seasonal', 'Seasonal'),
+                                        ('half_year', 'Half Year'),
+                                        ('yearly', 'Yearly'),
+                                        ], default='daily')
     # cal_function = fields.Many2one('sd_vcalculate.data', )
     image2 = fields.Binary( )
     select_duration = fields.Char()
