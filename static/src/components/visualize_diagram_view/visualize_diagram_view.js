@@ -48,14 +48,13 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         // todo: add eventListener on page resize
         onMounted(async ()=>{
             window.addEventListener("resize", self._onResize);
-//            console.log('onMounted: Plotly', Plotly)
-            self._loadDateInput()
-
         })
         onWillUnmount(async ()=>{
             window.removeEventListener("resize", self._onResize);
         })
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(()=>{
+            self._loadDateInput()
+        });
     },
     _onDatepicker: function(ev){
 //    console.log('_onDatepicker', this.DateTimeW)
