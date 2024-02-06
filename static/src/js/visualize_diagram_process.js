@@ -527,8 +527,8 @@ _onDatepicker: function(ev){
                    fontSlider.id = `fontSlider_${value.loc_id}`;
                    fontSlider.classList.add('draggable_font_size');
                    fontSlider.setAttribute('value', value.point_size);
-                   fontSlider.setAttribute('step', '5');
-                   fontSlider.setAttribute('min', '10');
+                   fontSlider.setAttribute('step', '2');
+                   fontSlider.setAttribute('min', '8');
                    fontSlider.setAttribute('max', '100');
                    settingDiv.appendChild(fontSlider);
                    fontSlider.addEventListener('mouseleave', e => moveMode = false)
@@ -610,7 +610,7 @@ _onDatepicker: function(ev){
             coverDiv.style.display = 'block'
             coverDiv.style.position = 'absolute'
             coverDiv.style.top = '0'
-//                coverDiv.innerHTML = '<div class="text-center h1 text-danger border border-danger">Cover Div</div>'
+                coverDiv.innerHTML = '<div class="text-center h1 text-danger border border-danger">Cover Div</div>'
         }
         let draggable_moves = self.el.querySelectorAll('draggable_move')
      },

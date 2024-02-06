@@ -204,7 +204,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
 
         })
         let coverDiv = document.createElement('div')
-//        imageEl.appendChild(coverDiv)
+        imageEl.appendChild(coverDiv)
         coverDiv.classList.add('temp_cover_div', 'border', )
         coverDiv.style.width = '100%'
         coverDiv.style.height = '100%'
