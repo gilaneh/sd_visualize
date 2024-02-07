@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <form js_class="visualize_diagram_view">
                     <div class=" row text-center mx-auto">
-                        <div class="mx-5">
+                        <div class="mx-5 d-none d-md-block">
                             <field name="report_duration"/>
                         </div>
                         <div class="col">
@@ -35,9 +35,9 @@
                                 <i class="fa fa-chevron-right"></i>
                             </div>
 
-                            <div name="print_pdf" class="btn btn-success mx-2 btn_print_pdf"
+                            <div name="print_pdf" class="btn btn-outline-primary mx-2 py-1 btn_print_pdf"
                                  data-toggle="tooltip" data-placement="top" title="">
-                                <i class="fa fa-camera"></i>
+                                <i class="fa fa-download d-block"></i>
                             </div>
                         </div>
 

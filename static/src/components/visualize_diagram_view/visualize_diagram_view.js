@@ -21,8 +21,6 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .o_datepicker': '_onDatepicker',
         'click .btn_print_pdf ': '_print_pdf',
-//        'click .previous_day_btn ': '_onPreviousDay',
-//        'click .next_day_btn ': '_onNextDay',
         'click .previous_day_btn, .next_day_btn ': '_onNextPreviousDay',
 
     }),
@@ -76,17 +74,6 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
 //        todo: if you hit the button several times, it will show data on top of the old one.
         this._updateElements(value.format("YYYY-MM-DD"))
         },
-    _onPreviousDay: function(ev){
-        console.log(ev.currentTarget.classList.contains('previous_day_btn'))
-        let value = this.DateTimeW.getValue().add(-1 * this._dayDiff(), 'days');
-        this.DateTimeW.setValue(value);
-        this._updateElements(value.format("YYYY-MM-DD"))
-    },
-    _onNextDay: function(ev){
-        let value = this.DateTimeW.getValue().add(1 * this._dayDiff(), 'days');
-        this.DateTimeW.setValue(value);
-        this._updateElements(value.format("YYYY-MM-DD"))
-    },
     _dayDiff: function(){
         let dayDiff = 1
         if(this.state.data.report_duration == 'weekly'){
@@ -134,16 +121,16 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     },
     _updateElements: function(date){
         let self = this;
-        let container_div_box = this.el.querySelectorAll('.container_div_box')
-//        console.log('container_div_box' , container_div_box )
-        container_div_box.forEach(div => div.remove())
         this._getDiagramData(date)
-        .then(data=>{
-            self.state.diagramValues = JSON.parse(data);
-            window.diagramValues = JSON.parse(data);
-            self._loadValues(JSON.parse(data))
-            return JSON.parse(data)
-        })
+            .then(data=>{
+                let container_div_box = self.el.querySelectorAll('.container_div_box')
+                container_div_box.forEach(div => div.remove())
+                self.state.diagramValues = JSON.parse(data);
+                window.diagramValues = JSON.parse(data);
+                self._loadValues(JSON.parse(data))
+                return JSON.parse(data)
+            })
+            .catch(err => console.log('cannot get diagram data:', err))
     },
     _loadDateInput: function(){
         let self = this;
@@ -303,13 +290,13 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         let btn_print_pdf = document.querySelector('.btn_print_pdf')
 //            console.log('_print_pdf_button',btn_print_pdf,  window)
         if (!btn_print_pdf){return}
-        btn_print_pdf.classList.remove('btn-success', 'btn-dark')
+        btn_print_pdf.classList.remove('btn-outline-primary', 'btn-dark')
         if (window.devicePixelRatio < .1){
-            btn_print_pdf.classList.add('btn-dark')
+            btn_print_pdf.classList.add('btn-outline-dark')
             btn_print_pdf.title = 'Zoom out the browser'
             return false
         }
-        btn_print_pdf.classList.add('btn-success')
+        btn_print_pdf.classList.add('btn-outline-primary')
         btn_print_pdf.title = 'Take a snapshot'
         return true
     },
