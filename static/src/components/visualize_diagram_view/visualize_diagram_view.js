@@ -66,21 +66,37 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     _onNextPreviousDay: function(ev){
         let value = this.DateTimeW.getValue()
         if (ev.currentTarget.classList.contains('previous_day_btn')){
-            value = value.add(-1 * this._dayDiff(), 'days');
+//            value = value.add(-1 * this._dayDiff(), 'days');
+            value = this._newDate(value, 'down');
+
         }else if (ev.currentTarget.classList.contains('next_day_btn')){
-            value = value.add(this._dayDiff(), 'days');
+//            value = value.add(this._dayDiff(), 'days');
+            value = this._newDate(value, 'up');
         }
         this.DateTimeW.setValue(value);
 //        todo: if you hit the button several times, it will show data on top of the old one.
         this._updateElements(value.format("YYYY-MM-DD"))
         },
+    _newDate: function(value, direction){
+        let newValue = value;
+        const newDateDir = direction == 'up' ? 1 : -1
+        if(this.state.data.report_duration == 'daily'){
+            newValue = value.add(newDateDir, 'day')
+        } else if(this.state.data.report_duration == 'weekly'){
+            newValue = value.add(newDateDir, 'week').endOf('week')
+        } else if(this.state.data.report_duration == 'monthly'){
+            newValue = value.add(newDateDir, 'jmonth').endOf('jmonth')
+        }
+        return newValue;
+    },
+
     _dayDiff: function(){
         let dayDiff = 1
         if(this.state.data.report_duration == 'weekly'){
             dayDiff = 7
         } else if(this.state.data.report_duration == 'monthly'){
 //        todo: make sure it is on the other month based on 29 or 31 days of some months
-            dayDiff = 30
+            dayDiff = moment().endOf('jmonth')
         } else if(this.state.data.report_duration == 'seasonal'){
             dayDiff = 90
         } else if(this.state.data.report_duration == 'half_year'){
@@ -139,16 +155,44 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
 //            console.log('datetime', self.DateTimeW.$input)
 //            self.DateTimeW.$input.attr('placeholder', _t("Today"));
 //            let format = session.user_context.lang == 'fa_IR' ? "jYYYY/jMM/jDD" : "YYYY/MM/DD"
-            self.DateTimeW.setValue(moment());
+
+            self.DateTimeW.setValue(self._setValue());
             self.$('.o_note_show, .o_note').toggleClass('d-none');
         });
+        let selfChange = false
          this.DateTimeW.on('datetime_changed', this, function () {
                 var value = this.DateTimeW.getValue();
-                    console.log('Date', value )
-                if ((!value && this.value) || (value && !this._isSameValue(value))) {
+                if (!selfChange && ((!value && this.value) || (value && !this._isSameValue(value)))) {
+                    selfChange = true
+                    value = self._setValue(value)
+//                    self.DateTimeW.setValue(value);
+//                    console.log('Date', value , self._setValue(value))
                     this._updateElements(value.format("YYYY-MM-DD"))
+                    selfChange = false
+
                 }
             });
+    },
+    _setValue: function(value=moment()){
+//        let value = moment()
+        if(this.state.data.report_duration == 'weekly'){
+            value = value.endOf('week').subtract(1, 'week')
+        }
+        else if(this.state.data.report_duration == 'monthly'){
+            value = value.endOf('jmonth')
+        }
+//else if(this.state.data.report_duration == 'monthly'){
+////        todo: make sure it is on the other month based on 29 or 31 days of some months
+//            value = moment().endOf('jmonth')
+////            console.log(moment().endOf('jmonth').subtract(30, 'days'))
+//        } else if(this.state.data.report_duration == 'seasonal'){
+//            dayDiff = 90
+//        } else if(this.state.data.report_duration == 'half_year'){
+//            dayDiff = 180
+//        } else if(this.state.data.report_duration == 'yearly'){
+//            dayDiff = 365
+//        }
+    return value
     },
     _isSameValue: function (value) {
         if (this.value === false || value === false) {
@@ -328,7 +372,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         },
     _getDiagramData: async function(date=moment().format("YYYY-MM-DD")){
         let self = this;
-//            console.log('_getDiagramData:', date)
+//            console.log('_getDiagramData:', date, moment(date).format("jYYYY-jMM-jDD"))
         return await this._rpc({
                                 model: 'sd_visualize.diagram',
                                 method: 'get_diagram_values',
