@@ -30,7 +30,8 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         try {
             Plotly
         } catch (e) {
-            const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+//            const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+            const url = "/sd_visualize/static/src/lib/plotlyjs_2.29.1/plotly.min.js";
             await loadJS(url);
             }
         try {
@@ -46,7 +47,10 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         // todo: add eventListener on page resize
         onMounted(async ()=>{
             window.addEventListener("resize", self._onResize);
+
         })
+            let jsPlotlyTester = document.querySelector('#js-plotly-tester')
+            console.log('js-plotly-tester', jsPlotlyTester)
         onWillUnmount(async ()=>{
             window.removeEventListener("resize", self._onResize);
         })
@@ -68,7 +72,6 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         if (ev.currentTarget.classList.contains('previous_day_btn')){
 //            value = value.add(-1 * this._dayDiff(), 'days');
             value = this._newDate(value, 'down');
-
         }else if (ev.currentTarget.classList.contains('next_day_btn')){
 //            value = value.add(this._dayDiff(), 'days');
             value = this._newDate(value, 'up');
