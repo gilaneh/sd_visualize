@@ -17,4 +17,4 @@ x.makeTester=function(){var t=i.ensureSingleById(n.select("body"),
 1.1.0
 Some fundamental changes applyed
 
-1.0.3
+1.0.3[src](static%2Fsrc)
