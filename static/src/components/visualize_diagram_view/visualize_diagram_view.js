@@ -25,7 +25,8 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
 
     }),
     willStart: async function(){
-        let res = this._super.apply(this, arguments);
+        return this._super.apply(this, arguments)
+            .then(()=>{
 //        console.log('will start')
         try {
             Plotly
@@ -40,7 +41,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
             const url = "/sd_visualize/static/src/lib/html2canvas/html2canvas.min.js";
             await loadJS(url);
             }
-        return res
+            })
     },
     start: function(){
         let self = this;
