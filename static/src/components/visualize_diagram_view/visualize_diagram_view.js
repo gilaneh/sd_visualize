@@ -31,8 +31,8 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
         try {
             Plotly
         } catch (e) {
-            const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
-//            const url = "/sd_visualize/static/src/lib/plotlyjs_2.29.1/plotly.min.js";
+//            const url = "/sd_visualize/static/src/lib/plotlyjs_2.27.1/plotly.min.js";
+            const url = "/sd_visualize/static/src/lib/plotlyjs_2.29.1/plotly.min.js";
             await loadJS(url);
             }
         try {
