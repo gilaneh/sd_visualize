@@ -26,7 +26,7 @@ let VisualizeDiagramViewFormRenderer = FormRenderer.extend({
     }),
     willStart: async function(){
         return this._super.apply(this, arguments)
-            .then(()=>{
+            .then(async ()=>{
 //        console.log('will start')
         try {
             Plotly
